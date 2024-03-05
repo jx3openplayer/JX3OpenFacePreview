@@ -22,6 +22,10 @@ const options = [
   {
     label: "写实 正太",
     value: "real boy"
+  },
+  {
+    label: "写意 正太",
+    value: "fantacy boy"
   }
 ]
 
