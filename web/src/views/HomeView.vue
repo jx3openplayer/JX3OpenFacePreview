@@ -92,15 +92,15 @@ const update_love_option = (newv: string) => {
 
 const page_items_option = [
   {
-    label: "15",
+    label: "每页 15",
     value: "15"
   },
   {
-    label: "30",
+    label: "每页 30",
     value: "30"
   },
   {
-    label: "60",
+    label: "每页 60",
     value: "60"
   }
 ]

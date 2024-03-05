@@ -68,13 +68,21 @@ const getAssetsFile = (fp: string, url: string) => {
 
 const downloadButton = async () => {
     const zipFile = new jszip()
+    let index = 1
     for (let data of collectList.value) {
-        const fileData = await fetch(getAssetsFile('face.ini', `${data.style}/${data.sex}/${data.id}`))
-        zipFile.file(data.name + '.ini', await fileData.blob())
+        let ext = ".ini"
+        if (data.style != "real") ext = ".dat"
+        const fileData = await fetch(getAssetsFile('face' + ext, `${data.style}/${data.sex}/${data.id}`))
+        let filename = data.name + ext
+        while (!(filename in zipFile.files)) {
+            filename = data.name + '(' + index + ')' + ext
+            index++
+        }
+        zipFile.file(filename, await fileData.blob())
     }
     zipFile.generateAsync({ type: "blob" }).then(function (content) {
         // 生成二进制流
-        saveAs(content, "face.zip")
+        saveAs(content, "faces.zip")
         removeAllCollect()
         isShow.value = false
     })

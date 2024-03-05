@@ -40,9 +40,11 @@ if __name__ == '__main__':
                         "time": data["time"],
                     })
                     if not os.path.exists(os.path.join(kind_path, id, "face_front.png")):
-                        print(sex, " front ", id)
+                        if not os.path.exists(os.path.join(kind_path, id, "face_front.jpg")):
+                            print(sex, " front ", id)
                     if not os.path.exists(os.path.join(kind_path, id, "face_side.png")):
-                        print(sex, " side ", id)
+                        if not os.path.exists(os.path.join(kind_path, id, "face_side.jpg")):
+                            print(sex, " side ", id)
                     if os.path.exists(os.path.join(kind_path, id, "status.txt")):
                         os.remove(os.path.join(kind_path, id, "status.txt"))
                     if os.path.exists(os.path.join(kind_path, id, "status.png")):
