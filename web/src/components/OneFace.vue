@@ -30,11 +30,17 @@ const getAssetsFile = (fp: string) => {
 };
 
 const downloadButton = () => {
-    console.log(`${name.value}.ini`)
+
     if (facestyle === "real") {
-        saveAs(getAssetsFile('face.ini'), `${name.value}.ini`)
+        fetch(getAssetsFile('face.ini'), {
+            mode: 'cors'
+        }).then(async (res) => saveAs(await res.blob(), `${name.value}.ini`))
+
     } else {
-        saveAs(getAssetsFile('face.dat'), `${name.value}.dat`)
+        fetch(getAssetsFile('face.dat'), {
+            mode: 'cors'
+        }).then(async (res) => saveAs(await res.blob(), `${name.value}.dat`))
+
     }
 
 }
