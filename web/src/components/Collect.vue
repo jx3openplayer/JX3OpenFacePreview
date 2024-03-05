@@ -63,7 +63,7 @@ const closeMask = () => {
 }
 
 const getAssetsFile = (fp: string, url: string) => {
-    return `/data/${url}/${fp}`
+    return `https://storage.jx3openplayer.com/${encodeURIComponent(`data/${url}/${fp}`)}`
 };
 
 const downloadButton = async () => {

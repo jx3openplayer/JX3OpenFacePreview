@@ -52,12 +52,12 @@ if __name__ == '__main__':
                     
                     if os.path.exists(os.path.join(kind_path, id, "face_front.png")):
                         im = Image.open(os.path.join(kind_path, id, "face_front.png"))
-                        im.save(os.path.join(kind_path, id, "face_front.jpg"), quality=100)
-                        os.remove(os.path.join(kind_path, id, "face_front.png"))
+                        im.save(os.path.join(kind_path, id, "face_front.jpg"), quality=80)
+                        # os.remove(os.path.join(kind_path, id, "face_front.png"))
                     if os.path.exists(os.path.join(kind_path, id, "face_side.png")):
                         im = Image.open(os.path.join(kind_path, id, "face_side.png"))
-                        im.save(os.path.join(kind_path, id, "face_side.jpg"), quality=100)
-                        os.remove(os.path.join(kind_path, id, "face_side.png"))
+                        im.save(os.path.join(kind_path, id, "face_side.jpg"), quality=80)
+                        # os.remove(os.path.join(kind_path, id, "face_side.png"))
             faces = sorted(indexs[sex][sty], key=lambda x: x["time"], reverse=True)
             indexs[sex][sty] = faces
     with open("src/assets/index.json", "w", encoding="utf8") as f:

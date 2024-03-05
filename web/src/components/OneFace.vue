@@ -25,6 +25,10 @@ const getAssetsFile = (fp: string) => {
     return `/data/${url}/${fp}`
 };
 
+// const getAssetsFile = (fp: string) => {
+//     return `https://storage.jx3openplayer.com/${encodeURIComponent(`data/${url}/${fp}`)}`
+// };
+
 const downloadButton = () => {
     saveAs(getAssetsFile('face.ini'), `${name.value}.ini`)
 }
