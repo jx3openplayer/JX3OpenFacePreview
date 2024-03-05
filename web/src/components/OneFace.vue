@@ -21,26 +21,19 @@ const {
 
 const url = `${facestyle}/${sex}/${id}`
 
-// const getAssetsFile = (fp: string) => {
-//     return `/data/${url}/${fp}`
-// };
-
 const getAssetsFile = (fp: string) => {
-    return `https://storage.jx3openplayer.com/${encodeURIComponent(`data/${url}/${fp}`)}`
+    return `/data/${url}/${fp}`
 };
 
+// const getAssetsFile = (fp: string) => {
+//     return `https://storage.jx3openplayer.com/${encodeURIComponent(`data/${url}/${fp}`)}`
+// };
+
 const downloadButton = () => {
-
     if (facestyle === "real") {
-        fetch(getAssetsFile('face.ini'), {
-            mode: 'cors'
-        }).then(async (res) => saveAs(await res.blob(), `${name.value}.ini`))
-
+        saveAs(getAssetsFile('face.ini'), `${name.value}.ini`)
     } else {
-        fetch(getAssetsFile('face.dat'), {
-            mode: 'cors'
-        }).then(async (res) => saveAs(await res.blob(), `${name.value}.dat`))
-
+        saveAs(getAssetsFile('face.dat'), `${name.value}.dat`)
     }
 
 }
