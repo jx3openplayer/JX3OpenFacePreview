@@ -6,16 +6,11 @@ import sha256 from 'crypto-js/sha256';
 import CryptoJS from 'crypto-js';
 import OneFace from "../components/OneFace.vue";
 import {
-  NUpload,
-  NVirtualList,
-  NUploadDragger,
-  NText,
-  NInput,
-  NButton,
-  NFlex, NH2, NThing,
-  NAlert
+  NUpload,NUploadDragger,
+  NText,NH2, NThing,
+  useMessage
 } from "naive-ui";
-
+const message = useMessage()
 const faceData = ref<any>({});
 const showList = ref<any>([]);
 const noList = ref<string[]>([]);
@@ -28,6 +23,7 @@ const handleUploadChange = async (data: {
 
   if (!faceData.value[sha]) {
     noList.value.push(data.file.name);
+    message.error(`${data.file.name} 找不到对应的脸型`);
   } else {
     showList.value.push({
       ...faceData.value[sha],

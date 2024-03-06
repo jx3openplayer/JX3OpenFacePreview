@@ -4,7 +4,7 @@ import { ref, onMounted, inject, type Ref, watch } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
 import localforage from 'localforage'
-import { getAssetPath } from '@/lib/assets'
+import { getAssetPath, cache } from '@/lib/assets'
 import { checkTaitaiWeibo } from '@/lib/taitai'
 
 const {
@@ -146,7 +146,7 @@ watch(hairname, (newValue, oldValue) => {
 const frontImage = ref("")
 const sideImage = ref("")
 
-function imageToBlob(src: string): Promise<string> {
+function imageToBlob(src: string): Promise<Blob> {
     return new Promise((res, rej) => {
         let canvas = document.createElement('canvas');
         let ctx = canvas.getContext('2d');
@@ -157,7 +157,13 @@ function imageToBlob(src: string): Promise<string> {
             canvas.height = img.height;
             if (ctx != null) {
                 ctx.drawImage(img, 0, 0);
-                res(canvas.toDataURL());
+                canvas.toBlob((blob: Blob | null) => {
+                    if (blob != null) {
+                        res(blob)
+                    } else {
+                        rej()
+                    }
+                }, "image/webp")
             } else {
                 rej()
             }
@@ -167,20 +173,22 @@ function imageToBlob(src: string): Promise<string> {
 
 }
 
+
 const getImage = async (imgname: string, direction: string) => {
+    const bgimage = URL.createObjectURL(await cache(getAssetsFile(imgname), async () => await imageToBlob(getAssetsFile(imgname))))
     if (hairname.value === null) {
         if (direction === "front") {
-            frontImage.value = await imageToBlob(getAssetsFile(imgname))
+            frontImage.value = bgimage
         }
         else {
-            sideImage.value = await imageToBlob(getAssetsFile(imgname))
+            sideImage.value = bgimage
         }
         return
     }
     const img = new Image()
     img.setAttribute('crossorigin', 'anonymous')
 
-    img.onload = () => {
+    img.onload = async () => {
         let canvas = document.createElement("canvas");
         canvas.width = 616
         canvas.height = 612
@@ -200,13 +208,12 @@ const getImage = async (imgname: string, direction: string) => {
                 }
 
             }
-            img2.src = getAssetPath(`${hairname.value}.${direction}.${sex}.webp`, "hair")
+
+            img2.src = URL.createObjectURL(await cache(getAssetPath(`${hairname.value}.${direction}.${sex}.webp`, "hair"),
+                async () => await imageToBlob(getAssetPath(`${hairname.value}.${direction}.${sex}.webp`, "hair"))))
         }
     }
-
-    img.src = getAssetsFile(imgname)
-
-
+    img.src = bgimage
 }
 
 </script>
