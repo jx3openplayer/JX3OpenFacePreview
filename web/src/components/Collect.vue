@@ -5,7 +5,7 @@ import { saveAs } from 'file-saver'
 import localforage from 'localforage'
 import { ref } from 'vue';
 import jszip from 'jszip'
-import { getAssetPath, wait } from '@/lib/assets'
+import { getAssetPath } from '@/lib/assets'
 
 
 const collectdb = localforage.createInstance({

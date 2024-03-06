@@ -16,6 +16,9 @@ import { NCard, NFlex, NA, NBlockquote, NText, NH1, NH2 } from 'naive-ui'
       <br /> <br />
       如想要为此贡献新的脸型，可以访问<n-a href="https://f.wps.cn/g/P95JDjCH/">上传</n-a>填写表单。
       <br /> <br />
+      如果你希望增加链接支持太太，可以访问<n-a href=https://f.wps.cn/g/rfwEyacL>搜集表</n-a>登记某个太太的微博、淘宝店等信息。
+
+      <br /> <br />
       <n-blockquote>
         本项目仅为捏脸作品的预览和体验平台，如果您决定实际使用某款捏脸作品，请务必支持原作者购买正版。感谢您对我们项目的关注和支持！
         本项目为开源项目，不会要求任何付费与赞助。如有意见与建议，可前往<n-a

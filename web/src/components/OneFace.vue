@@ -5,6 +5,7 @@ import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
 import localforage from 'localforage'
 import { getAssetPath } from '@/lib/assets'
+import { checkTaitaiWeibo } from '@/lib/taitai'
 
 const {
     facestyle,
@@ -67,10 +68,12 @@ interface LoveData {
 const isLove = ref(false)
 const isCollect = ref(false)
 
+const weibo = ref<null | string>(null)
+
 onMounted(async () => {
     isLove.value = await lovedb.getItem<LoveData>(id) != null
     isCollect.value = await collectdb.getItem<CollectData>(id) != null
-
+    weibo.value = checkTaitaiWeibo(name)
     collectEvents.on('remove', async (mid: string) => {
         if (mid === id) {
             isCollect.value = false
@@ -111,6 +114,11 @@ const changeCollect = () => {
     }
 }
 
+const gotoWeibo = () => {
+    if (weibo.value != null) {
+        window.open(weibo.value, '_blank')
+    }
+}
 </script>
 
 <template>
@@ -135,6 +143,9 @@ const changeCollect = () => {
                     <n-button class="hover-button" text :type="isCollect ? 'success' : 'info'" @click="changeCollect">
                         <img v-if="isCollect" src="@/assets/collecticon.svg" style="height: 32px;" />
                         <img v-else src="@/assets/collect.svg" style="height: 32px;" />
+                    </n-button>
+                    <n-button v-if="weibo != null" class="hover-button" text @click="gotoWeibo">
+                        <img src="@/assets/weibo.svg" style="height: 32px;" />
                     </n-button>
                 </n-flex>
                 <n-time class="time" :time="time" type="date" time-zone="Asia/Shanghai" />
