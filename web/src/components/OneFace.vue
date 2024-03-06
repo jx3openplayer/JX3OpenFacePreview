@@ -143,12 +143,36 @@ watch(hairname, (newValue, oldValue) => {
 
 const frontImage = ref("")
 const sideImage = ref("")
+
+function imageToBlob(src: string): Promise<string> {
+    return new Promise((res, rej) => {
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        let img = new Image();
+        img.setAttribute('crossorigin', 'anonymous')
+        img.onload = function () {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            if (ctx != null) {
+                ctx.drawImage(img, 0, 0);
+                res(canvas.toDataURL());
+            } else {
+                rej()
+            }
+        };
+        img.src = src;
+    })
+
+}
+
 const getImage = async (imgname: string, direction: string) => {
     if (hairname.value === null) {
-        if (direction === "front")
-            frontImage.value = getAssetsFile(imgname)
-        else
-            sideImage.value = getAssetsFile(imgname)
+        if (direction === "front") {
+            frontImage.value = await imageToBlob(getAssetsFile(imgname))
+        }
+        else {
+            sideImage.value = await imageToBlob(getAssetsFile(imgname))
+        }
         return
     }
     const img = new Image()

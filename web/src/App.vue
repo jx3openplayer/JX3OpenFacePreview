@@ -8,15 +8,6 @@ const headerMenuOptions = [
     label: () => h(
       RouterLink,
       {
-        to: "/timeline"
-      },
-      { default: () => '最新' }
-    ),
-    key: "timeline-page",
-  }, {
-    label: () => h(
-      RouterLink,
-      {
         to: "/lib"
       },
       { default: () => '脸型' }
