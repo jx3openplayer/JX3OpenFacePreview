@@ -32,6 +32,16 @@ const headerMenuOptions = [
     ),
     key: "about-page",
   }
+  , {
+    label: () => h(
+      RouterLink,
+      {
+        to: "/upload"
+      },
+      { default: () => '上传预览' }
+    ),
+    key: "upload",
+  }
 ]
 
 const activeKey = ref("face-page")
