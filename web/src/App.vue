@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider } from 'naive-ui'
-import { h, ref } from 'vue';
+import { h, onMounted, ref } from 'vue';
 
 const headerMenuOptions = [
   {
@@ -12,7 +12,16 @@ const headerMenuOptions = [
       },
       { default: () => '脸型' }
     ),
-    key: "face-page",
+    key: "lib",
+  }, {
+    label: () => h(
+      RouterLink,
+      {
+        to: "/upload"
+      },
+      { default: () => '文件预览' }
+    ),
+    key: "upload",
   }, {
     label: () => h(
       RouterLink,
@@ -21,21 +30,23 @@ const headerMenuOptions = [
       },
       { default: () => '声明' }
     ),
-    key: "about-page",
+    key: "about",
   }
-  , {
-    label: () => h(
-      RouterLink,
-      {
-        to: "/upload"
-      },
-      { default: () => '上传预览' }
-    ),
-    key: "upload",
-  }
-]
 
-const activeKey = ref("face-page")
+]
+const route = useRoute()
+const activeKey = ref("lib")
+
+onMounted(() => {
+  for (let i = 0; i < headerMenuOptions.length; i++) {
+    const e = headerMenuOptions[i];
+    if (e.key === route.name) {
+      activeKey.value = e.key;
+      break;
+    }
+  }
+
+})
 
 
 </script>

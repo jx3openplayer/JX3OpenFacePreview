@@ -16,6 +16,7 @@ const {
     name,
     time,
     likes,
+    suffix
 } = defineProps<{
     facestyle: string,
     sex: string,
@@ -25,6 +26,7 @@ const {
     name: string,
     time: Date,
     likes?: number,
+    suffix?: string
 }>()
 
 const url = `${facestyle}/${sex}/${id}`
@@ -210,7 +212,7 @@ const getImage = async (imgname: string, direction: string) => {
 </script>
 
 <template>
-    <n-card class="one-face-card" :title="name">
+    <n-card class="one-face-card" :title="name + (suffix ?? '')">
         <n-image-group>
             <n-flex justify="center">
                 <n-image object-fit="fill" :class="fclass" :src="frontImage" />

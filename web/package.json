@@ -11,6 +11,7 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "crypto-js": "^4.2.0",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
     "localforage": "^1.10.0",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@rollup/rollup-win32-ia32-msvc": "^4.12.0",
     "@tsconfig/node20": "^20.1.2",
+    "@types/crypto-js": "^4.2.2",
     "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.11.24",
