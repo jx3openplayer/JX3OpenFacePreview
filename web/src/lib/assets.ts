@@ -9,3 +9,7 @@ const getAssetsFileS3 = (fp: string, url: string) => {
 const getAssetsFileLocal = (fp: string, url: string) => {
     return `/data/${url}/${fp}`
 };
+
+export async function wait(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+} 

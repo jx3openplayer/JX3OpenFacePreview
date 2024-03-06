@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import { NButton, NFloatButton, NDivider, NFlex } from 'naive-ui'
+import { NButton, NFloatButton, NDivider, NFlex, useMessage } from 'naive-ui'
 import { type CollectData, collectEvents } from '@/interface/face'
 import { saveAs } from 'file-saver'
 import localforage from 'localforage'
 import { ref } from 'vue';
 import jszip from 'jszip'
-import { getAssetPath } from '@/lib/assets'
+import { getAssetPath, wait } from '@/lib/assets'
 
 
 const collectdb = localforage.createInstance({
     name: 'collect_face',
 })
 const isShow = ref<boolean>(false);
-
+const message = useMessage()
 const collectList = ref<CollectData[]>([]);
-
+const downloading = ref(false);
 const showHideTime = 300
 const showCollect = () => {
+    if (downloading.value) return
     if (isShow.value) {
         isShow.value = false
         setTimeout(() => {
@@ -44,48 +45,67 @@ const getCollectList = async () => {
 }
 
 const removeCollect = async (id: string) => {
-    collectdb.removeItem(id)
+    await collectdb.removeItem(id)
     collectList.value = collectList.value.filter(v => v.id != id)
     collectEvents.emit('remove', id)
 }
 
-const removeAllCollect = async () => {
+const removeAllCollect = async (successData: string[]) => {
     const ids = await collectdb.keys()
     for (let id of ids) {
-        collectEvents.emit('remove', id)
+        if (successData.indexOf(id) != -1) {
+            await removeCollect(id)
+        }
     }
-    collectdb.clear()
-    collectList.value = []
 }
 
 const closeMask = () => {
+    if (downloading.value) return
     isShow.value = false
     setTimeout(() => {
         panelShow.value = isShow.value
     }, showHideTime);
 }
 
+const downloadText = ref("")
 
 const downloadButton = async () => {
     const zipFile = new jszip()
     let index = 1
+    downloading.value = true
+    let count = 0
+    downloadText.value = `正在下载中`
+    const successData: string[] = []
     for (let data of collectList.value) {
         let ext = ".ini"
         if (data.style != "real") ext = ".dat"
-        const fileData = await fetch(getAssetPath('face' + ext, `${data.style}/${data.sex}/${data.id}`))
-        let filename = data.name + ext
-        while ((filename in zipFile.files)) {
-            filename = data.name + '(' + index + ')' + ext
-            index++
+
+        try {
+            const fileData = await fetch(getAssetPath('face' + ext, `${data.style}/${data.sex}/${data.id}`))
+            let filename = data.name + ext
+            while ((filename in zipFile.files)) {
+                filename = data.name + '(' + index + ')' + ext
+                index++
+            }
+            zipFile.file(filename, await fileData.blob())
+            successData.push(data.id)
+        } catch (error) {
+            console.error(error)
+            message.error(`下载 ${data.name} 失败！`)
+            continue
         }
-        zipFile.file(filename, await fileData.blob())
+
+        count += 1
+        downloadText.value = `${count} / ${collectList.value.length}`
     }
     zipFile.generateAsync({ type: "blob" }).then(function (content) {
         // 生成二进制流
         saveAs(content, "faces.zip")
-        removeAllCollect()
+        removeAllCollect(successData)
         isShow.value = false
     })
+    downloading.value = false
+
 
 }
 
@@ -111,16 +131,17 @@ const panelClass = () => {
             <n-flex class="collect-i" v-for="data in collectList" :key="data.id">
                 <n-flex justify="space-between" style="width: 100%;">
                     <div style="max-width: 230px; ">{{ data.name }}</div>
-                    <n-button text class="hover-button">
-                        <img src="@/assets/remove.svg" style="height: 20px;" @click="removeCollect(data.id)" />
+                    <n-button text class="hover-button" :disabled="downloading" @click="removeCollect(data.id)">
+                        <img src="@/assets/remove.svg" style="height: 20px;" />
                     </n-button>
                 </n-flex>
                 <n-divider style="margin-top: 0px; margin-bottom: 0px;" />
             </n-flex>
         </div>
 
-        <n-button type="info" secondary round @click="downloadButton"
-            style="margin-bottom: 5px; width: 286px; margin-top: 10px;">打包下载全部</n-button>
+        <n-button :loading="downloading" type="info" secondary round @click="downloadButton"
+            style="margin-bottom: 5px; width: 286px; margin-top: 10px;">{{ downloading ? downloadText
+        : "打包下载全部" }}</n-button>
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import { NLayout, NLayoutHeader, NLayoutContent, NMenu } from 'naive-ui'
+import { NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider } from 'naive-ui'
 import { h, ref } from 'vue';
 
 const headerMenuOptions = [
@@ -41,12 +41,14 @@ const activeKey = ref("face-page")
 
 <template>
   <n-layout class="app">
-    <n-layout-header class="app-header" bordered>
-      <n-menu v-model:value="activeKey" mode="horizontal" :options="headerMenuOptions" />
-    </n-layout-header>
-    <n-layout-content>
-      <RouterView />
-    </n-layout-content>
+    <n-message-provider>
+      <n-layout-header class="app-header" bordered>
+        <n-menu v-model:value="activeKey" mode="horizontal" :options="headerMenuOptions" />
+      </n-layout-header>
+      <n-layout-content>
+        <RouterView />
+      </n-layout-content>
+    </n-message-provider>
   </n-layout>
 </template>
 
