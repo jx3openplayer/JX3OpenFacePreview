@@ -70,6 +70,10 @@ const closeMask = () => {
 const downloadText = ref("")
 
 const downloadButton = async () => {
+    if (collectList.value.length === 0) {
+        message.warning("空空如也，没有东西可以下载哦~")
+        return
+    }
     const zipFile = new jszip()
     let index = 1
     downloading.value = true
@@ -120,7 +124,7 @@ const panelClass = () => {
 </script>
 
 <template>
-    <n-float-button class="fixed hover-button" :right="20" :bottom="20" :width="60" :height="60" text
+    <n-float-button class="fixed hover-button" :right="20" :bottom="60" :width="60" :height="60" text
         @click="showCollect()">
         <img src="@/assets/collect.svg" style="height: 40px; margin-top: 8px;" />
     </n-float-button>
@@ -160,6 +164,7 @@ const panelClass = () => {
 .mask {
     height: 100vh;
     width: 100vw;
+    top: 0;
     position: fixed;
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 10;
