@@ -14,5 +14,13 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://faces.jx3openplayer.com",
+        changeOrigin: true,
+      }
+    }
   }
 })

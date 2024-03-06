@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NCard, NImage, NImageGroup, NFlex, NButton, NTime } from 'naive-ui'
+import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge } from 'naive-ui'
 import { ref, onMounted } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
@@ -15,6 +15,7 @@ const {
     hideSide,
     name,
     time,
+    likes,
 } = defineProps<{
     facestyle: string,
     sex: string,
@@ -23,6 +24,7 @@ const {
     hideSide?: boolean,
     name: string,
     time: Date,
+    likes?: number,
 }>()
 
 const url = `${facestyle}/${sex}/${id}`
@@ -69,6 +71,7 @@ const isLove = ref(false)
 const isCollect = ref(false)
 
 const weibo = ref<null | string>(null)
+const tmpLove = ref(0)
 
 onMounted(async () => {
     isLove.value = await lovedb.getItem<LoveData>(id) != null
@@ -86,6 +89,13 @@ const changeLove = () => {
     if (isLove.value) {
         isLove.value = false
         lovedb.removeItem(id)
+        fetch(`/api/update?type=dislike&id=${id}`, { method: "post" })
+        if (tmpLove.value === 0) {
+            tmpLove.value = -1
+        } else {
+            tmpLove.value = 0
+        }
+
     } else {
         isLove.value = true
         lovedb.setItem<LoveData>(id, {
@@ -94,6 +104,8 @@ const changeLove = () => {
             sex: sex,
             style: facestyle
         })
+        fetch(`/api/update?type=like&id=${id}`, { method: "post" })
+        tmpLove.value = 1
     }
 }
 
@@ -136,10 +148,13 @@ const gotoWeibo = () => {
                     <n-button class="hover-button" text @click="downloadButton">
                         <img src="@/assets/download.svg" style="height: 32px;" />
                     </n-button>
-                    <n-button class="hover-button" text :type="isLove ? 'warning' : 'error'" @click="changeLove">
-                        <img v-if="isLove" src="@/assets/like.svg" style="height: 32px;" />
-                        <img v-else src="@/assets/unlike.svg" style="height: 32px;" />
-                    </n-button>
+                    <n-badge :value="(likes ?? 0) + tmpLove" :color="isLove ? 'red' : 'grey'">
+                        <n-button class="hover-button" text :type="isLove ? 'warning' : 'error'" @click="changeLove">
+                            <img v-if="isLove" src="@/assets/like.svg" style="height: 32px;" />
+                            <img v-else src="@/assets/unlike.svg" style="height: 32px;" />
+                        </n-button>
+                    </n-badge>
+
                     <n-button class="hover-button" text :type="isCollect ? 'success' : 'info'" @click="changeCollect">
                         <img v-if="isCollect" src="@/assets/collecticon.svg" style="height: 32px;" />
                         <img v-else src="@/assets/collect.svg" style="height: 32px;" />

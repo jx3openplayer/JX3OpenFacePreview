@@ -33,7 +33,7 @@ import { NCard, NFlex, NA, NBlockquote, NText, NH1, NH2 } from 'naive-ui'
 @media (min-width: 512px) {
   .about {
     min-height: 10vh;
-    max-width: 50vh;
+    max-width: 50vw;
     margin-top: 50px;
   }
 }
