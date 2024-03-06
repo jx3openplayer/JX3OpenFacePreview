@@ -43,6 +43,7 @@ const page_item_counts = ref(15)
 const allInfo = ref<{
   name: string;
   id: string;
+  time: number;
 }[]>([])
 
 const pagecount = computed(() => Math.ceil(allInfo.value.length / page_item_counts.value))
@@ -52,7 +53,6 @@ const collectionSearch = async () => {
 
   if (love_option_value.value === 'love') {
     const loveIds = await lovedb.keys();
-    console.log(loveIds)
     allInfo.value = allInfo.value.filter((it) => loveIds.includes(it.id))
   }
   if (search_value.value != "") {
@@ -61,7 +61,7 @@ const collectionSearch = async () => {
   collection.value = allInfo.value.slice((page.value - 1) * page_item_counts.value, (page.value) * page_item_counts.value)
 }
 
-const collection = ref<{ name: string, id: string }[]>([])
+const collection = ref<{ name: string, id: string, time: number }[]>([])
 
 const option_change = (value: string) => {
   const classes = value.split(" ")
@@ -155,7 +155,7 @@ onMounted(() => {
     <n-layout>
       <n-layout-header class="pages-header app-content">
         <n-flex justify="center">
-          <n-flex justify="center"  class="page-setting">
+          <n-flex justify="center" class="page-setting">
             <n-select class="select-face-style" v-model:value="init_option" :options="options"
               :on-update:value="option_change" />
             <n-select class="small-select" v-model:value="love_option_value" :options="love_option"
@@ -179,7 +179,8 @@ onMounted(() => {
       <n-layout-content class="app-content">
         <n-flex justify="center" class="main-face-cards">
           <OneFace :class="face_grid_class" v-for="it in collection" :facestyle="facestyle" :sex="sex" :id="it.id"
-            :key="it.id + face_size_value" :facesize="face_size_value" />
+            :key="it.id + face_size_value" :facesize="face_size_value" :name="it.name"
+            :time="new Date(it.time * 1000)" />
         </n-flex>
       </n-layout-content>
       <n-layout-footer class="app-footer">

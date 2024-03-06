@@ -10,13 +10,17 @@ const {
     sex,
     id,
     facesize,
-    hideSide
+    hideSide,
+    name,
+    time,
 } = defineProps<{
     facestyle: string,
     sex: string,
     id: string,
     facesize: string,
-    hideSide?: boolean
+    hideSide?: boolean,
+    name: string,
+    time: Date,
 }>()
 
 const url = `${facestyle}/${sex}/${id}`
@@ -31,9 +35,9 @@ const getAssetsFile = (fp: string) => {
 
 const downloadButton = () => {
     if (facestyle === "real") {
-        saveAs(getAssetsFile('face.ini'), `${name.value}.ini`)
+        saveAs(getAssetsFile('face.ini'), `${name}.ini`)
     } else {
-        saveAs(getAssetsFile('face.dat'), `${name.value}.dat`)
+        saveAs(getAssetsFile('face.dat'), `${name}.dat`)
     }
 
 }
@@ -52,8 +56,6 @@ const collectdb = localforage.createInstance({
     name: 'collect_face',
 })
 
-const name = ref("")
-const time = ref(new Date())
 interface LoveData {
     id: string,
     time: number,
@@ -65,10 +67,6 @@ const isLove = ref(false)
 const isCollect = ref(false)
 
 onMounted(async () => {
-    const res = await fetch(getAssetsFile('data.json'))
-    const jdata = await res.json()
-    name.value = jdata.name
-    time.value = new Date(jdata.time * 1000)
     isLove.value = await lovedb.getItem<LoveData>(id) != null
     isCollect.value = await collectdb.getItem<CollectData>(id) != null
 
@@ -88,7 +86,7 @@ const changeLove = () => {
         isLove.value = true
         lovedb.setItem<LoveData>(id, {
             id: id,
-            time: time.value.getTime(),
+            time: time.getTime(),
             sex: sex,
             style: facestyle
         })
@@ -104,10 +102,10 @@ const changeCollect = () => {
         isCollect.value = true
         collectdb.setItem<CollectData>(id, {
             id: id,
-            time: time.value.getTime(),
+            time: time.getTime(),
             sex: sex,
             style: facestyle,
-            name: name.value,
+            name: name,
         })
     }
 }
