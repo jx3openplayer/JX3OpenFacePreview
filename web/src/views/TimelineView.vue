@@ -26,6 +26,7 @@ const virtualListInst = ref<VirtualListInst>()
 const scrollEvent = (event: Event) => {
 
 }
+console.log(alldata)
 </script>
 
 <template>
