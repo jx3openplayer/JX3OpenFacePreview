@@ -21,13 +21,13 @@ const {
 
 const url = `${facestyle}/${sex}/${id}`
 
-const getAssetsFile = (fp: string) => {
-    return `/data/${url}/${fp}`
-};
-
 // const getAssetsFile = (fp: string) => {
-//     return `https://storage.jx3openplayer.com/${encodeURIComponent(`data/${url}/${fp}`)}`
+//     return `/data/${url}/${fp}`
 // };
+
+const getAssetsFile = (fp: string) => {
+    return `https://storage.jx3openplayer.com/${encodeURIComponent(`data/${url}/${fp}`)}`
+};
 
 const downloadButton = () => {
     if (facestyle === "real") {

@@ -3,7 +3,7 @@ import json
 import time
 from PIL import Image
 
-rooturl = "public/data"
+rooturl = "data"
 
 styles = [
     "real", "fantacy"

@@ -74,7 +74,7 @@ const downloadButton = async () => {
         if (data.style != "real") ext = ".dat"
         const fileData = await fetch(getAssetsFile('face' + ext, `${data.style}/${data.sex}/${data.id}`))
         let filename = data.name + ext
-        while (!(filename in zipFile.files)) {
+        while ((filename in zipFile.files)) {
             filename = data.name + '(' + index + ')' + ext
             index++
         }
