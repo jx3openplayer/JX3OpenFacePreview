@@ -82,7 +82,7 @@ const handleSelectHair = (hair: string) => {
     </div>
     <div :class="'fixed-menu collect' + panelClass()" v-show="panelShow">
         <n-h3 prefix="bar">
-            发型试穿
+            假发
         </n-h3>
         <n-thing>
             你可以选择发型进行尝试，有什么别的发型特别喜欢可以<n-a href="https://f.wps.cn/g/1MzVJFMU/">联系我们</n-a>哦

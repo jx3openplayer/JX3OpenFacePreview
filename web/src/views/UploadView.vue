@@ -45,24 +45,26 @@ const handleBeforeUpload = async (data: {
 
   return true;
 };
+interface DataSource {
+  [key: string]: {
+    [key: string]: any[],
+  }
+}
 onMounted(() => {
+  let _dataSource: DataSource = dataSource;
   let obj: any = {};
-  const response = Object.entries(dataSource);
-
-  response.forEach((v) => {
-    const arr = [...v[1].real, ...v[1].fantacy];
-    let arrRes = Object.entries(v[1]);
-    arrRes.forEach((type) => {
-      type[1].forEach((face) => {
-        obj[face.id] = {
+  for (let sexType in dataSource) {
+    for (let faceType in _dataSource[sexType]) {
+      for (let face of _dataSource[sexType][faceType]) {
+        let _face = {
           ...face,
-          sex: v[0],
-          style: type[0],
-        }
-
-      });
-    });
-  });
+          sex: sexType,
+          style: faceType,
+        };
+        obj[face.id] = _face;
+      }
+    }
+  };
   faceData.value = obj;
 });
 
