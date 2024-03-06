@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
 import localforage from 'localforage'
+import { getAssetPath } from '@/lib/assets'
 
 const {
     facestyle,
@@ -30,7 +31,7 @@ const url = `${facestyle}/${sex}/${id}`
 // };
 
 const getAssetsFile = (fp: string) => {
-    return `https://storage.jx3openplayer.com/${encodeURIComponent(`data/${url}/${fp}`)}`
+    return getAssetPath(fp, url)
 };
 
 const downloadButton = () => {

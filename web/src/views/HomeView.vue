@@ -57,6 +57,7 @@ const collectionSearch = async () => {
   }
   if (search_value.value != "") {
     allInfo.value = allInfo.value.filter((it) => it.name.indexOf(search_value.value) != -1)
+    page.value = 1
   }
   collection.value = allInfo.value.slice((page.value - 1) * page_item_counts.value, (page.value) * page_item_counts.value)
 }
@@ -90,7 +91,7 @@ const love_option = [
 const love_option_value = ref("all")
 const update_love_option = (newv: string) => {
   love_option_value.value = newv
-  console.log(love_option_value.value)
+  page.value = 1
   collectionSearch()
 }
 
@@ -112,6 +113,7 @@ const page_items_option_value = ref("30")
 const update_page_items_option = (newv: string) => {
   page_items_option_value.value = newv
   page_item_counts.value = parseInt(newv)
+  page.value = 1
   collectionSearch()
 }
 

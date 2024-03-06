@@ -5,6 +5,9 @@ import { saveAs } from 'file-saver'
 import localforage from 'localforage'
 import { ref } from 'vue';
 import jszip from 'jszip'
+import { getAssetPath } from '@/lib/assets'
+
+
 const collectdb = localforage.createInstance({
     name: 'collect_face',
 })
@@ -62,9 +65,6 @@ const closeMask = () => {
     }, showHideTime);
 }
 
-const getAssetsFile = (fp: string, url: string) => {
-    return `https://storage.jx3openplayer.com/${encodeURIComponent(`data/${url}/${fp}`)}`
-};
 
 const downloadButton = async () => {
     const zipFile = new jszip()
@@ -72,7 +72,7 @@ const downloadButton = async () => {
     for (let data of collectList.value) {
         let ext = ".ini"
         if (data.style != "real") ext = ".dat"
-        const fileData = await fetch(getAssetsFile('face' + ext, `${data.style}/${data.sex}/${data.id}`))
+        const fileData = await fetch(getAssetPath('face' + ext, `${data.style}/${data.sex}/${data.id}`))
         let filename = data.name + ext
         while ((filename in zipFile.files)) {
             filename = data.name + '(' + index + ')' + ext
