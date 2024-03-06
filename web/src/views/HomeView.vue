@@ -3,8 +3,9 @@ import OneFace from '../components/OneFace.vue';
 import { NFlex, NSelect, NPagination, NLayout, NLayoutContent, NLayoutHeader, NLayoutFooter, NInput } from 'naive-ui'
 import Collect from '@/components/Collect.vue';
 import indexjson from "@/assets/index.json"
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, provide, ref } from 'vue';
 import localforage from 'localforage'
+import Hair from '@/components/Hair.vue';
 
 const options = [
   {
@@ -24,6 +25,10 @@ const options = [
     value: "real boy"
   },
   {
+    label: "写意 成女",
+    value: "fantacy female"
+  },
+  {
     label: "写意 正太",
     value: "fantacy boy"
   }
@@ -34,8 +39,8 @@ const lovedb = localforage.createInstance({
 })
 
 const facestyle = ref("real")
-const sex = ref("girl")
-const init_option = ref("real girl")
+const sex = ref("female")
+const init_option = ref("real female")
 const search_value = ref("")
 
 const page = ref(1)
@@ -75,7 +80,6 @@ const getAllInfo = async () => {
       d.likes = e.likes
     }
   }
-  console.log(data)
 }
 
 const collection = ref<{ name: string, id: string, time: number, likes?: number }[]>([])
@@ -87,6 +91,7 @@ const option_change = (value: string) => {
   page.value = 1
   init_option.value = value
   collectionSearch()
+  localforage.setItem("init_option", value)
 }
 
 
@@ -161,14 +166,24 @@ const pageChange = (num: number) => {
   collectionSearch()
 }
 
-onMounted(() => {
-  collectionSearch()
+onMounted(async () => {
+  let r = await localforage.getItem<string>("init_option")
+  if (r) {
+    option_change(r)
+  } else {
+    collectionSearch()
+  }
+
 })
+
+const hair = ref<string | null>(null)
+provide("hair", hair)
 
 </script>
 
 <template>
   <main>
+    <Hair />
     <Collect />
     <n-layout>
       <n-layout-header class="pages-header app-content">

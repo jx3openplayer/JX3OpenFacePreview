@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge } from 'naive-ui'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject, type Ref, watch } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
 import localforage from 'localforage'
@@ -83,6 +83,8 @@ onMounted(async () => {
             collectdb.removeItem(id)
         }
     })
+    getImage("face_front.jpg", "front")
+    getImage("face_side.jpg", "side")
 })
 
 const changeLove = () => {
@@ -131,15 +133,64 @@ const gotoWeibo = () => {
         window.open(weibo.value, '_blank')
     }
 }
+
+const _hair_default = ref(null)
+const hairname = inject<Ref<string | null>>("hair", _hair_default)
+watch(hairname, (newValue, oldValue) => {
+    getImage("face_front.jpg", "front")
+    getImage("face_side.jpg", "side")
+})
+
+const frontImage = ref("")
+const sideImage = ref("")
+const getImage = async (imgname: string, direction: string) => {
+    if (hairname.value === null) {
+        if (direction === "front")
+            frontImage.value = getAssetsFile(imgname)
+        else
+            sideImage.value = getAssetsFile(imgname)
+        return
+    }
+    const img = new Image()
+    img.setAttribute('crossorigin', 'anonymous')
+
+    img.onload = () => {
+        let canvas = document.createElement("canvas");
+        canvas.width = 616
+        canvas.height = 612
+        let ctx = canvas.getContext("2d");
+        if (ctx) {
+            ctx.drawImage(img, 0, 0, 616, 612)
+
+            let img2 = new Image()
+            img2.setAttribute('crossorigin', 'anonymous')
+            img2.onload = () => {
+                if (ctx != null) {
+                    ctx.drawImage(img2, 0, 0, 616, 612);
+                    if (direction === "front")
+                        frontImage.value = canvas.toDataURL("image/webp")
+                    else
+                        sideImage.value = canvas.toDataURL("image/webp")
+                }
+
+            }
+            img2.src = getAssetPath(`${hairname.value}.${direction}.${sex}.webp`, "hair")
+        }
+    }
+
+    img.src = getAssetsFile(imgname)
+
+
+}
+
 </script>
 
 <template>
     <n-card class="one-face-card" :title="name">
         <n-image-group>
             <n-flex justify="center">
-                <n-image lazy object-fit="fill" :class="fclass" :src="getAssetsFile('face_front.jpg')" />
-                <n-image v-if="!hideSide" lazy object-fit="fill" :class="fclass"
-                    :src="getAssetsFile('face_side.jpg')" />
+                <n-image object-fit="fill" :class="fclass" :src="frontImage" />
+                <n-image v-if="!hideSide" object-fit="fill" :class="fclass" :src="sideImage" />
             </n-flex>
         </n-image-group>
         <template #action>

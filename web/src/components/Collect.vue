@@ -3,10 +3,18 @@ import { NButton, NFloatButton, NDivider, NFlex, useMessage } from 'naive-ui'
 import { type CollectData, collectEvents } from '@/interface/face'
 import { saveAs } from 'file-saver'
 import localforage from 'localforage'
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import jszip from 'jszip'
 import { getAssetPath } from '@/lib/assets'
 
+import { panelEvents } from '@/interface/panels'
+
+
+panelEvents.on('open', (id: string) => {
+    if (id !== "collect") {
+        closeMask()
+    }
+})
 
 const collectdb = localforage.createInstance({
     name: 'collect_face',
@@ -20,6 +28,7 @@ const showCollect = () => {
     if (downloading.value) return
     if (isShow.value) {
         isShow.value = false
+        
         setTimeout(() => {
             panelShow.value = true
         }, showHideTime);
@@ -28,7 +37,7 @@ const showCollect = () => {
         setTimeout(() => {
             isShow.value = true
         }, 0);
-
+        panelEvents.emit('open', 'collect')
         getCollectList()
     }
 
@@ -120,6 +129,10 @@ const panelClass = () => {
     else
         return ' panel-hide'
 }
+
+watch(downloading, (newVal) => {
+    panelEvents.emit("downloading", newVal)
+})
 
 </script>
 
