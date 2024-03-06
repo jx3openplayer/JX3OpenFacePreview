@@ -59,7 +59,7 @@ const showHairs = () => {
         panelEvents.emit('open', 'hair')
         // 显示
         hairs.value = [
-            "龙隐", "兔金",
+            "龙隐", "龙隐金", "兔金", "红六七（黑）"
         ]
     }
 }
@@ -85,7 +85,7 @@ const handleSelectHair = (hair: string) => {
             假发
         </n-h3>
         <n-thing>
-            你可以选择发型进行尝试，有什么别的发型特别喜欢可以<n-a href="https://f.wps.cn/g/1MzVJFMU/">联系我们</n-a>哦
+            你可以选择发型进行尝试，有什么别的发型特别喜欢可以<n-a href="https://f.wps.cn/g/1MzVJFMU/">联系我们</n-a>哦。（不过遗失的美好里查看不了的我也没办法）
         </n-thing>
         <div style="height:100%; overflow: auto;">
             <n-list hoverable clickable>

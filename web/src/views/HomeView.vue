@@ -62,7 +62,6 @@ const collectionSearch = async () => {
   }
   if (search_value.value != "") {
     allInfo.value = allInfo.value.filter((it) => it.name.indexOf(search_value.value) != -1)
-    page.value = 1
   }
   collection.value = allInfo.value.slice((page.value - 1) * page_item_counts.value, (page.value) * page_item_counts.value)
   getAllInfo()
@@ -97,6 +96,7 @@ const option_change = (value: string) => {
 
 const seachUpdate = (value: string) => {
   search_value.value = value
+  page.value = 1
   collectionSearch()
 }
 const love_option = [
