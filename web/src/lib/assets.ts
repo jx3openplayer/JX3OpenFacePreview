@@ -78,7 +78,7 @@ export async function prepareIndexData(firstDownload: () => void) {
     } else {
         firstDownload()
     }
-    updateIndexData()
+    await updateIndexData()
 }
 
 async function updateIndexData() {
