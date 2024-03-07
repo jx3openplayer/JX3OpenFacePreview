@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import type { UploadFileInfo } from "naive-ui";
-import dataSource from "@/assets/index.json";
+import { getIndexData } from "@/lib/assets";
 import sha256 from 'crypto-js/sha256';
 import CryptoJS from 'crypto-js';
 import OneFace from "../components/OneFace.vue";
 import {
-  NUpload,NUploadDragger,
-  NText,NH2, NThing,
+  NUpload, NUploadDragger,
+  NText, NH2, NThing,
   useMessage
 } from "naive-ui";
 const message = useMessage()
@@ -41,15 +41,11 @@ const handleBeforeUpload = async (data: {
 
   return true;
 };
-interface DataSource {
-  [key: string]: {
-    [key: string]: any[],
-  }
-}
-onMounted(() => {
-  let _dataSource: DataSource = dataSource;
+
+onMounted(async () => {
+  let _dataSource = await getIndexData();
   let obj: any = {};
-  for (let sexType in dataSource) {
+  for (let sexType in _dataSource) {
     for (let faceType in _dataSource[sexType]) {
       for (let face of _dataSource[sexType][faceType]) {
         let _face = {

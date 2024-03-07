@@ -4,7 +4,7 @@ import { ref, onMounted, inject, type Ref, watch } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
 import localforage from 'localforage'
-import { getAssetPath, cache } from '@/lib/assets'
+import { getAssetPath, cache, cacheurl } from '@/lib/assets'
 import { checkTaitaiWeibo } from '@/lib/taitai'
 
 const {
@@ -39,13 +39,12 @@ const getAssetsFile = (fp: string) => {
     return getAssetPath(fp, url)
 };
 
-const downloadButton = () => {
+const downloadButton = async () => {
     if (facestyle === "real") {
-        saveAs(getAssetsFile('face.ini'), `${name}.ini`)
+        saveAs(await cacheurl(getAssetsFile('face.ini')), `${name}.ini`)
     } else {
-        saveAs(getAssetsFile('face.dat'), `${name}.dat`)
+        saveAs(await cacheurl(getAssetsFile('face.dat')), `${name}.dat`)
     }
-
 }
 
 const fclass = ref("face-img")

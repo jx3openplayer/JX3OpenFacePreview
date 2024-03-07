@@ -5,7 +5,7 @@ import { saveAs } from 'file-saver'
 import localforage from 'localforage'
 import { ref, watch } from 'vue';
 import jszip from 'jszip'
-import { getAssetPath } from '@/lib/assets'
+import { getAssetPath, cacheurl } from '@/lib/assets'
 
 import { panelEvents } from '@/interface/panels'
 
@@ -28,7 +28,7 @@ const showCollect = () => {
     if (downloading.value) return
     if (isShow.value) {
         isShow.value = false
-        
+
         setTimeout(() => {
             panelShow.value = true
         }, showHideTime);
@@ -94,13 +94,13 @@ const downloadButton = async () => {
         if (data.style != "real") ext = ".dat"
 
         try {
-            const fileData = await fetch(getAssetPath('face' + ext, `${data.style}/${data.sex}/${data.id}`))
+            const fileData = await cacheurl(getAssetPath('face' + ext, `${data.style}/${data.sex}/${data.id}`))
             let filename = data.name + ext
             while ((filename in zipFile.files)) {
                 filename = data.name + '(' + index + ')' + ext
                 index++
             }
-            zipFile.file(filename, await fileData.blob())
+            zipFile.file(filename, fileData)
             successData.push(data.id)
         } catch (error) {
             console.error(error)

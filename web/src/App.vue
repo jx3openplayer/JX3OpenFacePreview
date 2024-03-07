@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider } from 'naive-ui'
+import { NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider, NAlert } from 'naive-ui'
 import { h, onMounted, ref } from 'vue';
+import { prepareIndexData, updateConfig } from './lib/assets';
 
 const headerMenuOptions = [
   {
@@ -37,6 +38,16 @@ const headerMenuOptions = [
 const route = useRoute()
 const activeKey = ref("lib")
 
+const showWait = ref(false)
+prepareIndexData(() => {
+  showWait.value = true
+  console.log("第一次下载！")
+}).then(() => {
+  showWait.value = false
+})
+
+updateConfig()
+
 onMounted(() => {
   for (let i = 0; i < headerMenuOptions.length; i++) {
     const e = headerMenuOptions[i];
@@ -45,7 +56,6 @@ onMounted(() => {
       break;
     }
   }
-
 })
 
 
@@ -58,6 +68,9 @@ onMounted(() => {
         <n-menu v-model:value="activeKey" mode="horizontal" :options="headerMenuOptions" />
       </n-layout-header>
       <n-layout-content>
+        <n-alert v-if="showWait" title="正在下载数据" type="warning">
+          正在下载数据列表，请耐心等待~
+        </n-alert>
         <RouterView />
       </n-layout-content>
     </n-message-provider>

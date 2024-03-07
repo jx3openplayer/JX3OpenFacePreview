@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import { NButton, NFloatButton, NDivider, NFlex, useMessage, NList, NListItem, NThing, NH3, NA } from 'naive-ui'
-import { type CollectData, collectEvents } from '@/interface/face'
-import { saveAs } from 'file-saver'
-import localforage from 'localforage'
+import { NFloatButton, useMessage, NList, NListItem, NThing, NH3, NA } from 'naive-ui'
 import { inject, ref, type Ref } from 'vue';
-import jszip from 'jszip'
-import { getAssetPath } from '@/lib/assets'
+import { getConfig } from '@/lib/assets'
 import { panelEvents } from '@/interface/panels'
 
 panelEvents.on('downloading', (data: boolean) => {
@@ -58,9 +54,7 @@ const showHairs = () => {
         }, 0);
         panelEvents.emit('open', 'hair')
         // 显示
-        hairs.value = [
-            "龙隐", "龙隐金", "兔金", "红六七（黑）"
-        ]
+        hairs.value = getConfig().fakehair
     }
 }
 

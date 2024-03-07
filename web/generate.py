@@ -60,5 +60,5 @@ if __name__ == '__main__':
                         # os.remove(os.path.join(kind_path, id, "face_side.png"))
             faces = sorted(indexs[sex][sty], key=lambda x: x["time"], reverse=True)
             indexs[sex][sty] = faces
-    with open("src/assets/index.json", "w", encoding="utf8") as f:
+    with open("data/faces-index.json", "w", encoding="utf8") as f:
         json.dump(indexs, f, ensure_ascii=False)

@@ -2,7 +2,7 @@
 import OneFace from '../components/OneFace.vue';
 import { NFlex, NSelect, NPagination, NLayout, NLayoutContent, NLayoutHeader, NLayoutFooter, NInput } from 'naive-ui'
 import Collect from '@/components/Collect.vue';
-import indexjson from "@/assets/index.json"
+import { getIndexData } from '@/lib/assets'
 import { computed, onMounted, provide, ref } from 'vue';
 import localforage from 'localforage'
 import Hair from '@/components/Hair.vue';
@@ -54,7 +54,7 @@ const allInfo = ref<{
 const pagecount = computed(() => Math.ceil(allInfo.value.length / page_item_counts.value))
 
 const collectionSearch = async () => {
-  allInfo.value = (indexjson as any)[sex.value][facestyle.value]
+  allInfo.value = (await getIndexData())[sex.value][facestyle.value]
 
   if (love_option_value.value === 'love') {
     const loveIds = await lovedb.keys();
