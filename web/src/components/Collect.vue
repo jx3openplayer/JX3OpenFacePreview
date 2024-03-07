@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NButton, NFloatButton, NDivider, NFlex, useMessage } from 'naive-ui'
+import { NButton, NFloatButton, NDivider, NFlex, useMessage, NBadge } from 'naive-ui'
 import { type CollectData, collectEvents } from '@/interface/face'
 import { saveAs } from 'file-saver'
 import localforage from 'localforage'
@@ -139,7 +139,9 @@ watch(downloading, (newVal) => {
 <template>
     <n-float-button class="fixed hover-button" :right="20" :bottom="60" :width="60" :height="60" text
         @click="showCollect()">
-        <img src="@/assets/collect.svg" style="height: 40px; margin-top: 8px;" />
+        <n-badge :value="collectList.length" color="grey">
+            <img src="@/assets/collect.svg" style="height: 40px; margin-top: 8px;" />
+        </n-badge>
     </n-float-button>
     <div class="mask" v-show="isShow" @click="closeMask">
     </div>

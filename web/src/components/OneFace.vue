@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge, NTag, NTooltip, NText } from 'naive-ui'
+import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge, NTag, NTooltip } from 'naive-ui'
 import { ref, onMounted, inject, type Ref, watch } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
@@ -219,12 +219,13 @@ const getImage = async (imgname: string, direction: string) => {
 
 
 const priceColor = () => {
-    if (!price) return "default"
-    if (price * off <= 9000)
-        return "success"
-    if (price * off >= 12000)
-        return "error"
     return "default"
+    // if (!price) return "default"
+    // if (price * off <= 9000)
+    //     return "success"
+    // if (price * off >= 12000)
+    //     return "error"
+    // return "default"
 }
 
 let off = 0.5
@@ -236,8 +237,8 @@ let off = 0.5
         <template #header-extra>
             <n-tooltip v-if="price" trigger="hover">
                 <template #trigger>
-                    <n-tag v-if="off === 1" round class="price" :type="priceColor()">{{ "￥ " + price / 100 }}</n-tag>
-                    <n-tag v-if="off != 1" round class="price" :type="priceColor()">
+                    <n-tag v-if="off === 1" round class="price" type="default" size="small">{{ "￥ " + price / 100 }}</n-tag>
+                    <n-tag v-if="off != 1" round class="price" type="default" size="small">
                         ￥{{ price * off / 100 }}
                     </n-tag>
                 </template>
