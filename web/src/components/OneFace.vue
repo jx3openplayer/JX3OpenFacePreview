@@ -6,7 +6,7 @@ import { type CollectData, collectEvents } from '@/interface/face'
 import localforage from 'localforage'
 import { getAssetPath, cache, cacheurl } from '@/lib/assets'
 import { checkTaitaiWeibo } from '@/lib/taitai'
-
+import { panelEvents } from '@/interface/panels'
 const {
     facestyle,
     sex,
@@ -115,19 +115,21 @@ const changeLove = () => {
 }
 
 
-const changeCollect = () => {
+const changeCollect = async () => {
     if (isCollect.value) {
         isCollect.value = false
-        collectdb.removeItem(id)
+        await collectdb.removeItem(id)
+        panelEvents.emit('collect', id)
     } else {
         isCollect.value = true
-        collectdb.setItem<CollectData>(id, {
+        await collectdb.setItem<CollectData>(id, {
             id: id,
             time: time.getTime(),
             sex: sex,
             style: facestyle,
             name: name,
         })
+        panelEvents.emit('collect', id)
     }
 }
 
@@ -237,7 +239,8 @@ let off = 0.5
         <template #header-extra>
             <n-tooltip v-if="price" trigger="hover">
                 <template #trigger>
-                    <n-tag v-if="off === 1" round class="price" type="default" size="small">{{ "￥ " + price / 100 }}</n-tag>
+                    <n-tag v-if="off === 1" round class="price" type="default" size="small">{{ "￥ " + price / 100
+                        }}</n-tag>
                     <n-tag v-if="off != 1" round class="price" type="default" size="small">
                         ￥{{ price * off / 100 }}
                     </n-tag>

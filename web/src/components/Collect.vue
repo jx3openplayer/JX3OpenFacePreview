@@ -9,6 +9,9 @@ import { getAssetPath, cacheurl } from '@/lib/assets'
 
 import { panelEvents } from '@/interface/panels'
 
+panelEvents.on('collect', (id: string) => {
+    getCollectList()
+})
 
 panelEvents.on('open', (id: string) => {
     if (id !== "collect") {
@@ -52,7 +55,7 @@ const getCollectList = async () => {
         if (data) collectList.value.push(data)
     }
 }
-
+getCollectList()
 const removeCollect = async (id: string) => {
     await collectdb.removeItem(id)
     collectList.value = collectList.value.filter(v => v.id != id)
