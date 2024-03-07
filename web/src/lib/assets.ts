@@ -40,6 +40,25 @@ export async function cacheurl(url: string) {
     return file
 }
 
+interface CacheJson {
+    timesc: number
+    json: any
+}
+
+export async function cachejson(url: string) {
+    const old = await cachedb.getItem<CacheJson>(url)
+    const update = async () => {
+        const file = await (await fetch(url)).json()
+        await cachedb.setItem(url, { timesc: Date.now(), json: file })
+        return file
+    }
+    if (old != null) {
+        update()
+        return old.json
+    }
+    return await update()
+}
+
 interface IndexDataSource {
     [key: string]: {
         [key: string]: any[],
@@ -134,4 +153,23 @@ export async function updateConfig() {
 
 export function getConfig() {
     return configdata
+}
+
+
+export async function generateIdMap() {
+    let _dataSource = await getIndexData();
+    let obj: any = {};
+    for (let sexType in _dataSource) {
+        for (let faceType in _dataSource[sexType]) {
+            for (let face of _dataSource[sexType][faceType]) {
+                let _face = {
+                    ...face,
+                    sex: sexType,
+                    style: faceType,
+                };
+                obj[face.id] = _face;
+            }
+        }
+    };
+    return obj;
 }

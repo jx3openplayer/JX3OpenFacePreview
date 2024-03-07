@@ -9,6 +9,16 @@ const headerMenuOptions = [
     label: () => h(
       RouterLink,
       {
+        to: "/rank"
+      },
+      { default: () => '热门' }
+    ),
+    key: "rank",
+  },
+  {
+    label: () => h(
+      RouterLink,
+      {
         to: "/lib"
       },
       { default: () => '脸型' }

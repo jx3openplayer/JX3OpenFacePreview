@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import type { UploadFileInfo } from "naive-ui";
-import { getIndexData } from "@/lib/assets";
+import { generateIdMap } from "@/lib/assets";
 import sha256 from 'crypto-js/sha256';
 import CryptoJS from 'crypto-js';
 import OneFace from "../components/OneFace.vue";
@@ -43,21 +43,7 @@ const handleBeforeUpload = async (data: {
 };
 
 onMounted(async () => {
-  let _dataSource = await getIndexData();
-  let obj: any = {};
-  for (let sexType in _dataSource) {
-    for (let faceType in _dataSource[sexType]) {
-      for (let face of _dataSource[sexType][faceType]) {
-        let _face = {
-          ...face,
-          sex: sexType,
-          style: faceType,
-        };
-        obj[face.id] = _face;
-      }
-    }
-  };
-  faceData.value = obj;
+  faceData.value = await generateIdMap();
 });
 
 // 这里的搜索不靠谱，搜到的居然是整个数据库的内容
