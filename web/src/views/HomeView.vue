@@ -45,11 +45,15 @@ const search_value = ref("")
 
 const page = ref(1)
 const page_item_counts = ref(15)
-const allInfo = ref<{
-  name: string;
-  id: string;
-  time: number;
-}[]>([])
+
+interface FaceItem {
+  name: string
+  id: string
+  time: number
+  likes?: number
+  p?: number
+}
+const allInfo = ref<FaceItem[]>([])
 
 const pagecount = computed(() => Math.ceil(allInfo.value.length / page_item_counts.value))
 
@@ -81,7 +85,7 @@ const getAllInfo = async () => {
   }
 }
 
-const collection = ref<{ name: string, id: string, time: number, likes?: number }[]>([])
+const collection = ref<FaceItem[]>([])
 
 const option_change = (value: string) => {
   const classes = value.split(" ")
@@ -213,7 +217,7 @@ provide("hair", hair)
         <n-flex justify="center" class="main-face-cards">
           <OneFace :class="face_grid_class" v-for="it in collection" :facestyle="facestyle" :sex="sex" :id="it.id"
             :key="it.id + face_size_value" :facesize="face_size_value" :name="it.name" :time="new Date(it.time * 1000)"
-            :likes="it.likes" />
+            :likes="it.likes" :price="it.p" />
         </n-flex>
       </n-layout-content>
       <n-layout-footer class="app-footer">

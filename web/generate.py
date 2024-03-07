@@ -34,11 +34,15 @@ if __name__ == '__main__':
                         data["time"] = time.time()
                         with open(os.path.join(kind_path, id, "data.json"), "w", encoding="utf8") as fd:
                             json.dump(data, fd, ensure_ascii=False)
-                    indexs[sex][sty].append({
+                    
+                    dd = {
                         "id": id,
                         "name": data["name"],
                         "time": data["time"],
-                    })
+                    }
+                    if "price" in data and data["price"] is not None:
+                        dd["p"] = data["price"]
+                    indexs[sex][sty].append(dd)
                     if not os.path.exists(os.path.join(kind_path, id, "face_front.png")):
                         if not os.path.exists(os.path.join(kind_path, id, "face_front.jpg")):
                             print(sex, " front ", id)

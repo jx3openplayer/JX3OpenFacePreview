@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge } from 'naive-ui'
+import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge, NTag, NTooltip, NText } from 'naive-ui'
 import { ref, onMounted, inject, type Ref, watch } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
@@ -16,7 +16,8 @@ const {
     name,
     time,
     likes,
-    suffix
+    suffix,
+    price
 } = defineProps<{
     facestyle: string,
     sex: string,
@@ -26,7 +27,8 @@ const {
     name: string,
     time: Date,
     likes?: number,
-    suffix?: string
+    suffix?: string,
+    price?: number,
 }>()
 
 const url = `${facestyle}/${sex}/${id}`
@@ -215,16 +217,42 @@ const getImage = async (imgname: string, direction: string) => {
     img.src = bgimage
 }
 
+
+const priceColor = () => {
+    if (!price) return "default"
+    if (price * off <= 9000)
+        return "success"
+    if (price * off >= 12000)
+        return "error"
+    return "default"
+}
+
+let off = 0.5
+
 </script>
 
 <template>
     <n-card class="one-face-card" :title="name + (suffix ?? '')">
+        <template #header-extra>
+            <n-tooltip v-if="price" trigger="hover">
+                <template #trigger>
+                    <n-tag v-if="off === 1" round class="price" :type="priceColor()">{{ "￥ " + price / 100 }}</n-tag>
+                    <n-tag v-if="off != 1" round class="price" :type="priceColor()">
+                        ￥{{ price * off / 100 }}
+                    </n-tag>
+                </template>
+                商城售价{{ price }}通宝，折合人民币{{ (price ?? 0) / 100 }}元。{{ (off != 1) ? "当前打折为" + off * 100 + "%！" : "" }}
+            </n-tooltip>
+
+        </template>
+
         <n-image-group>
             <n-flex justify="center">
                 <n-image object-fit="fill" :class="fclass" :src="frontImage" />
                 <n-image v-if="!hideSide" object-fit="fill" :class="fclass" :src="sideImage" />
             </n-flex>
         </n-image-group>
+
         <template #action>
             <n-flex justify="space-between">
                 <n-flex>
@@ -246,6 +274,7 @@ const getImage = async (imgname: string, direction: string) => {
                         <img src="@/assets/weibo.svg" style="height: 32px;" />
                     </n-button>
                 </n-flex>
+
                 <n-time class="time" :time="time" type="date" time-zone="Asia/Shanghai" />
             </n-flex>
         </template>
@@ -292,5 +321,9 @@ const getImage = async (imgname: string, direction: string) => {
 .time {
     color: rgb(173, 173, 173);
     align-content: center;
+}
+
+.price {
+    /* position: absolute; */
 }
 </style>
