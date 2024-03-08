@@ -1,4 +1,5 @@
 import localforage from 'localforage'
+
 export function getAssetPath(fp: string, url: string) {
     return getAssetsFileS3(fp, url)
 }
@@ -166,9 +167,19 @@ export function getConfig() {
     return configdata
 }
 
+export interface IndexMapItem {
+    id: string
+    name: string
+    sex: 'girl' | 'female' | 'man' | 'boy'
+    p?: number
+    style: 'real' | 'fantacy'
+    time: number
+}
+let indexMap: {
+    [key: string]: IndexMapItem
+} | null = null
 
-export async function generateIdMap() {
-    let _dataSource = await getIndexData();
+function _generateMap(_dataSource: IndexDataSource) {
     let obj: any = {};
     for (let sexType in _dataSource) {
         for (let faceType in _dataSource[sexType]) {
@@ -182,5 +193,12 @@ export async function generateIdMap() {
             }
         }
     };
-    return obj;
+    indexMap = obj
+}
+export async function generateIdMap() {
+    let _dataSource = await getIndexData();
+    if (indexMap === null) {
+        _generateMap(_dataSource)
+    }
+    return indexMap!;
 }

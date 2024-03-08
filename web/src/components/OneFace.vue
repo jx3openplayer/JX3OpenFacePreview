@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge, NTag, NTooltip, NFloatButton, NIcon } from 'naive-ui'
+import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge, NTag, NTooltip, NFloatButton, NIcon, useMessage } from 'naive-ui'
 import { ref, onMounted, inject, type Ref, watch } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
@@ -30,7 +30,7 @@ const {
     suffix?: string,
     price?: number,
 }>()
-
+const message = useMessage()
 const url = `${facestyle}/${sex}/${id}`
 
 // const getAssetsFile = (fp: string) => {
@@ -242,6 +242,22 @@ const onefaceChange = () => {
     else onefaceWhat.value = 'front'
 }
 
+const fstyleTranslate: { [key: string]: string } = {
+    "real": "写实",
+    "fantacy": "写意"
+}
+
+const sexTranslate: { [key: string]: string } = {
+    "boy": "正太",
+    "man": "成男",
+    "female": "成女",
+    "girl": "萝莉"
+}
+const share = () => {
+    navigator.clipboard.writeText(`（${fstyleTranslate[facestyle]}·${sexTranslate[sex]}）「${name}」 https://faces.jx3openplayer.com/share?id=${id}`)
+    message.success("已复制到剪贴板！")
+}
+
 </script>
 
 <template>
@@ -289,6 +305,9 @@ const onefaceChange = () => {
                     <n-button class="hover-button" text :type="isCollect ? 'success' : 'info'" @click="changeCollect">
                         <img v-if="isCollect" src="@/assets/collecticon.svg" style="height: 32px;" />
                         <img v-else src="@/assets/collect.svg" style="height: 32px;" />
+                    </n-button>
+                    <n-button class="hover-button" text @click="share">
+                        <img src="@/assets/share.svg" style="height: 32px;" />
                     </n-button>
                     <n-button v-if="weibo != null" class="hover-button" text @click="gotoWeibo">
                         <img src="@/assets/weibo.svg" style="height: 32px;" />

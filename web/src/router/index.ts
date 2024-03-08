@@ -32,6 +32,11 @@ const router = createRouter({
       name: 'rank',
       component: () => import('../views/RankView.vue')
     },
+    {
+      path: '/share',
+      name: 'share',
+      component: () => import('../views/ShareView.vue')
+    },
   ]
 })
 

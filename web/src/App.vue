@@ -58,13 +58,16 @@ prepareIndexData(() => {
 updateConfig()
 
 watch(() => route.name, (newVal, oldVal) => {
+  let found = false
   for (let i = 0; i < headerMenuOptions.length; i++) {
     const e = headerMenuOptions[i];
     if (e.key === newVal) {
       activeKey.value = e.key;
+      found = true
       break;
     }
   }
+  if (!found) activeKey.value = ""
 })
 
 onMounted(() => {
