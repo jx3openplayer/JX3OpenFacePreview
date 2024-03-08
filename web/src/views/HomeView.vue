@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import OneFace from '../components/OneFace.vue';
-import { NFlex, NSelect, NPagination, NLayout, NLayoutContent, NLayoutHeader, NLayoutFooter, NInput } from 'naive-ui'
+import { NFlex, NSelect, NPagination, NLayout, NLayoutContent, NLayoutHeader, NLayoutFooter, NInput, NSwitch, NTooltip } from 'naive-ui'
 import Collect from '@/components/Collect.vue';
-import { getIndexData } from '@/lib/assets'
+import { getIndexData, usePersistConfig } from '@/lib/assets'
 import { computed, onMounted, provide, ref } from 'vue';
 import localforage from 'localforage'
 import Hair from '@/components/Hair.vue';
@@ -40,7 +40,7 @@ const lovedb = localforage.createInstance({
 
 const facestyle = ref("real")
 const sex = ref("female")
-const init_option = ref("real female")
+const init_option = usePersistConfig("init-face-style-sex-option", "real female")
 const search_value = ref("")
 
 const page = ref(1)
@@ -134,7 +134,7 @@ const page_items_option = [
     value: "60"
   }
 ]
-const page_items_option_value = ref("30")
+const page_items_option_value = usePersistConfig("init-cout-per-page", "30")
 const update_page_items_option = (newv: string) => {
   page_items_option_value.value = newv
   page_item_counts.value = parseInt(newv)
@@ -147,22 +147,42 @@ const face_size_option = [
     label: "小",
     value: "small"
   }, {
+    label: "中",
+    value: "medium"
+  }, {
     label: "大",
     value: "large"
   }
 ]
 
-const face_size_value = ref("small")
+const face_size_value = usePersistConfig("init-face-size", "small")
 const update_face_size_option = (newv: string) => {
   face_size_value.value = newv
-  if (newv === "small") {
-    face_grid_class.value = "one-face-grid"
-  } else {
-    face_grid_class.value = "one-face-grid-large"
-  }
+
   collectionSearch()
 }
-const face_grid_class = ref("one-face-grid")
+const face_grid_class = computed(() => {
+  if (face_size_value.value === "small") {
+    if (!facedir.value) {
+      return "one-face-grid-front"
+    } else {
+      return "one-face-grid"
+    }
+  } else if (face_size_value.value === "medium") {
+    if (!facedir.value) {
+      return "one-face-grid-mid-front"
+    } else {
+      return "one-face-grid-mid"
+    }
+  } else {
+    if (!facedir.value) {
+      return "one-face-grid-large-front"
+    } else {
+      return "one-face-grid-large"
+    }
+
+  }
+})
 
 const pageChange = (num: number) => {
   page.value = num
@@ -171,17 +191,13 @@ const pageChange = (num: number) => {
 }
 
 onMounted(async () => {
-  let r = await localforage.getItem<string>("init_option")
-  if (r) {
-    option_change(r)
-  } else {
-    collectionSearch()
-  }
-
+  collectionSearch()
 })
 
 const hair = ref<string | null>(null)
 provide("hair", hair)
+
+const facedir = usePersistConfig("init-face-dir", false)
 
 </script>
 
@@ -193,6 +209,17 @@ provide("hair", hair)
       <n-layout-header class="pages-header app-content">
         <n-flex justify="center">
           <n-flex justify="center" class="page-setting">
+            <n-flex vertical justify="center">
+              <n-switch :round="false" v-model:value="facedir">
+                <template #checked>
+                  详细
+                </template>
+                <template #unchecked>
+                  正面
+                </template>
+              </n-switch>
+            </n-flex>
+
             <n-select class="select-face-style" v-model:value="init_option" :options="options"
               :on-update:value="option_change" />
             <n-select class="small-select" v-model:value="love_option_value" :options="love_option"
@@ -216,7 +243,7 @@ provide("hair", hair)
         <n-flex justify="center" class="main-face-cards">
           <OneFace :class="face_grid_class" v-for="it in collection" :facestyle="facestyle" :sex="sex" :id="it.id"
             :key="it.id + face_size_value" :facesize="face_size_value" :name="it.name" :time="new Date(it.time * 1000)"
-            :likes="it.likes" :price="it.p" />
+            :likes="it.likes" :price="it.p" :hide-side="!facedir" />
         </n-flex>
       </n-layout-content>
       <n-layout-footer class="app-footer">
@@ -229,7 +256,7 @@ provide("hair", hair)
   </main>
 </template>
 
-<style>
+<style scoped>
 .pages-header {
   padding-top: 20px;
 }
@@ -249,12 +276,29 @@ provide("hair", hair)
   border-radius: 8px;
 }
 
+
 .one-face-grid {
   width: 470px
 }
 
+.one-face-grid-front {
+  width: 270px
+}
+
+.one-face-grid-mid {
+  width: 800px
+}
+
+.one-face-grid-mid-front {
+  width: 400px
+}
+
 .one-face-grid-large {
   width: 1070px
+}
+
+.one-face-grid-large-front {
+  width: 570px
 }
 
 .select-face-style {

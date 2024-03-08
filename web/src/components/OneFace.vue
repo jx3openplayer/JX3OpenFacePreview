@@ -51,6 +51,10 @@ const downloadButton = async () => {
 
 const fclass = ref("face-img")
 
+if (facesize === "medium") {
+    fclass.value = "face-img-mid"
+}
+
 if (facesize === "large") {
     fclass.value = "face-img-large"
 }
@@ -329,6 +333,10 @@ const share = () => {
 .face-img {
     width: 200px;
     height: 200px;
+}
+
+.face-img-mid {
+    height: 350px;
 }
 
 

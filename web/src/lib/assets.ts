@@ -1,4 +1,5 @@
 import localforage from 'localforage'
+import { ref, watch } from 'vue';
 
 export function getAssetPath(fp: string, url: string) {
     return getAssetsFileS3(fp, url)
@@ -201,4 +202,16 @@ export async function generateIdMap() {
         _generateMap(_dataSource)
     }
     return indexMap!;
+}
+
+export function usePersistConfig<T>(key: string, defaultv: T) {
+    let r = window.localStorage.getItem("config-" + key)
+    if (r != null) {
+        defaultv = JSON.parse(r)
+    }
+    const v = ref<T>(defaultv)
+    watch(v, (newv) => {
+        window.localStorage.setItem("config-" + key, JSON.stringify(newv))
+    })
+    return v
 }
