@@ -102,8 +102,8 @@ const option_change = (value: string) => {
   page.value = 1
   init_option.value = value
   collectionSearch()
-  localforage.setItem("init_option", value)
 }
+option_change(init_option.value)
 
 
 const seachUpdate = (value: string) => {
@@ -149,6 +149,7 @@ const update_page_items_option = (newv: string) => {
   page.value = 1
   collectionSearch()
 }
+update_page_items_option(page_items_option_value.value)
 
 const face_size_option = [
   {
@@ -198,14 +199,16 @@ const pageChange = (num: number) => {
   collectionSearch()
 }
 
-onMounted(async () => {
-  collectionSearch()
-})
+
 
 const hair = ref<string | null>(null)
 provide("hair", hair)
 
 const facedir = usePersistConfig("init-face-dir", false)
+
+onMounted(async () => {
+  collectionSearch()
+})
 
 </script>
 
