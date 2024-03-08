@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { NLayout, NLayoutHeader, NLayoutContent, NMenu, NMessageProvider, NAlert } from 'naive-ui'
-import { h, onMounted, ref } from 'vue';
+import { h, onMounted, ref, watch } from 'vue';
 import { prepareIndexData, updateConfig } from './lib/assets';
 
 const headerMenuOptions = [
@@ -46,7 +46,7 @@ const headerMenuOptions = [
 
 ]
 const route = useRoute()
-const activeKey = ref("lib")
+const activeKey = ref("")
 
 const showWait = ref(false)
 prepareIndexData(() => {
@@ -56,18 +56,19 @@ prepareIndexData(() => {
   showWait.value = false
 })
 
-updateConfig()
-
-onMounted(() => {
+watch(() => route.name, (newVal, oldVal) => {
   for (let i = 0; i < headerMenuOptions.length; i++) {
     const e = headerMenuOptions[i];
-    if (e.key === route.name) {
+    if (e.key === newVal) {
       activeKey.value = e.key;
       break;
     }
   }
 })
 
+onMounted(() => {
+
+})
 
 </script>
 
