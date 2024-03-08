@@ -55,6 +55,7 @@ prepareIndexData(() => {
 }).then(() => {
   showWait.value = false
 })
+updateConfig()
 
 watch(() => route.name, (newVal, oldVal) => {
   for (let i = 0; i < headerMenuOptions.length; i++) {
