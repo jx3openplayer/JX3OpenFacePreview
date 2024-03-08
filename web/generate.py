@@ -66,3 +66,7 @@ if __name__ == '__main__':
             indexs[sex][sty] = faces
     with open("data/faces-index.json", "w", encoding="utf8") as f:
         json.dump(indexs, f, ensure_ascii=False)
+    for sty in styles:
+        for sex in sexs:
+            with open(f"data/faces-index.{sty}.{sex}.json", "w", encoding="utf8") as f:
+                json.dump(indexs[sex][sty], f, ensure_ascii=False)

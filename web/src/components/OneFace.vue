@@ -281,7 +281,7 @@ const share = () => {
         </template>
 
         <n-image-group>
-            <n-flex justify="center">
+            <n-flex justify="center" align="end" style="height: 100%;">
                 <n-image v-if="(!hideSide) || (hideSide && onefaceWhat === 'front')" object-fit="fill" :class="fclass"
                     :src="frontImage" />
                 <n-image v-if="(!hideSide) || (hideSide && onefaceWhat === 'side')" object-fit="fill" :class="fclass"
