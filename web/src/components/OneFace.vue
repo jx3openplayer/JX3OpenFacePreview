@@ -212,8 +212,11 @@ const getImage = async (imgname: string, direction: string) => {
 
             }
 
-            img2.src = URL.createObjectURL(await cache(getAssetPath(`${hairname.value}.${direction}.${sex}.webp`, "hair"),
-                async () => await imageToBlob(getAssetPath(`${hairname.value}.${direction}.${sex}.webp`, "hair"))))
+            img2.src = URL.createObjectURL(await cache(
+                getAssetPath(`${hairname.value}.${direction}.${sex}.webp`, "hair"),
+                async () => await imageToBlob(getAssetPath(`${hairname.value}.${direction}.${sex}.webp`, "hair")),
+                1000 * 60 * 24
+            ))
         }
     }
     img.src = bgimage

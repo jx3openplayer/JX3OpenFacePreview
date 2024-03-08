@@ -24,9 +24,18 @@ interface CacheFile {
     file: Blob
 }
 
-export async function cache(fileid: string, loader: () => Promise<Blob>) {
+export async function cache(fileid: string, loader: () => Promise<Blob>, timeout?: number) {
     const old = await cachedb.getItem<CacheFile>(fileid)
-    if (old != null) return old.file
+    if (old != null) {
+        if (timeout && Date.now() - old.timesc > timeout) {
+            const update = async () => {
+                const file = await loader()
+                await cachedb.setItem(fileid, { timesc: Date.now(), file })
+            }
+            update()
+        }
+        return old.file
+    }
     const file = await loader()
     await cachedb.setItem(fileid, { timesc: Date.now(), file })
     return file
