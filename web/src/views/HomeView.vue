@@ -29,6 +29,14 @@ const options = [
     value: "fantacy female"
   },
   {
+    label: "写意 萝莉",
+    value: "fantacy girl"
+  },
+  {
+    label: "写意 成男",
+    value: "fantacy man"
+  },
+  {
     label: "写意 正太",
     value: "fantacy boy"
   }
