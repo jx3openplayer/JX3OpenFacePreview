@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge, NTag, NTooltip } from 'naive-ui'
+import { NCard, NImage, NImageGroup, NFlex, NButton, NTime, NBadge, NTag, NTooltip, NFloatButton, NIcon } from 'naive-ui'
 import { ref, onMounted, inject, type Ref, watch } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
 import localforage from 'localforage'
-import { getAssetPath, cache, cacheurl } from '@/lib/assets'
+import { getAssetPath, cache, cacheurl, getConfig } from '@/lib/assets'
 import { checkTaitaiWeibo } from '@/lib/taitai'
 import { panelEvents } from '@/interface/panels'
 const {
@@ -76,6 +76,9 @@ const isCollect = ref(false)
 const weibo = ref<null | string>(null)
 const tmpLove = ref(0)
 
+const onefaceWhat = ref<'front' | 'side'>('front')
+
+const off = ref(0.5)
 onMounted(async () => {
     isLove.value = await lovedb.getItem<LoveData>(id) != null
     isCollect.value = await collectdb.getItem<CollectData>(id) != null
@@ -88,6 +91,7 @@ onMounted(async () => {
     })
     getImage("face_front.jpg", "front")
     getImage("face_side.jpg", "side")
+    const cfg = await getConfig()
 })
 
 const changeLove = () => {
@@ -233,7 +237,10 @@ const priceColor = () => {
     // return "default"
 }
 
-let off = 0.5
+const onefaceChange = () => {
+    if (onefaceWhat.value === 'front') onefaceWhat.value = 'side'
+    else onefaceWhat.value = 'front'
+}
 
 </script>
 
@@ -255,11 +262,17 @@ let off = 0.5
 
         <n-image-group>
             <n-flex justify="center">
-                <n-image object-fit="fill" :class="fclass" :src="frontImage" />
-                <n-image v-if="!hideSide" object-fit="fill" :class="fclass" :src="sideImage" />
+                <n-image v-if="(!hideSide) || (hideSide && onefaceWhat === 'front')" object-fit="fill" :class="fclass"
+                    :src="frontImage" />
+                <n-image v-if="(!hideSide) || (hideSide && onefaceWhat === 'side')" object-fit="fill" :class="fclass"
+                    :src="sideImage" />
             </n-flex>
         </n-image-group>
-
+        <n-float-button v-if="hideSide" :right="20" :bottom="80" position="absolute" @click="onefaceChange">
+            <n-icon>
+                <img src="@/assets/changeface.svg" />
+            </n-icon>
+        </n-float-button>
         <template #action>
             <n-flex justify="space-between">
                 <n-flex>
@@ -288,7 +301,7 @@ let off = 0.5
     </n-card>
 </template>
 
-<style>
+<style scoped>
 .one-face-card {
     min-height: 200px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -299,10 +312,21 @@ let off = 0.5
     height: 200px;
 }
 
-.face-img-large {
-    width: 500px;
-    height: 500px;
+
+@media (max-width: 600px) {
+    .face-img-large {
+        /* width: 90vw; */
+        height: 90vw;
+    }
 }
+
+@media (min-width: 600px) {
+    .face-img-large {
+        width: 500px;
+        height: 500px;
+    }
+}
+
 
 
 .hover-button {
@@ -328,9 +352,5 @@ let off = 0.5
 .time {
     color: rgb(173, 173, 173);
     align-content: center;
-}
-
-.price {
-    /* position: absolute; */
 }
 </style>

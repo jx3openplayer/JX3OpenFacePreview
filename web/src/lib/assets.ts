@@ -138,14 +138,16 @@ interface ConfigData {
             [key: string]: string
         }
     },
-    fakehair: string[]
+    fakehair: string[],
+    faceoff: number,
 }
 
 let configdata: ConfigData = {
     taitai: {
         weibo: {}
     },
-    fakehair: []
+    fakehair: [],
+    faceoff: 1
 }
 
 export async function updateConfig() {

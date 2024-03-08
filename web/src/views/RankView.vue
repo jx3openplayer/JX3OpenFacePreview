@@ -93,7 +93,7 @@ provide("hair", hair)
                 <n-flex justify="center" class="main-face-cards">
                     <OneFace :class="face_grid_class" v-for="it in curCollection" :facestyle="it.style" :sex="it.sex"
                         :id="it.id" :key="it.id + face_size_value" :facesize="face_size_value" :name="it.name"
-                        :time="new Date(it.time * 1000)" :likes="it.likes" :price="it.p" />
+                        :time="new Date(it.time * 1000)" :likes="it.likes" :price="it.p" hide-side/>
                 </n-flex>
             </n-layout-content>
         </n-layout>
@@ -140,7 +140,7 @@ provide("hair", hair)
 }
 
 .one-face-grid-large {
-    width: 1070px
+    width: 570px
 }
 
 .select-face-style {

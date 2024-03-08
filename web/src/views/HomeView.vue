@@ -211,7 +211,6 @@ provide("hair", hair)
             </n-flex>
           </n-flex>
         </n-flex>
-
       </n-layout-header>
       <n-layout-content class="app-content">
         <n-flex justify="center" class="main-face-cards">
