@@ -6,6 +6,7 @@ import { getIndexData, usePersistConfig } from '@/lib/assets'
 import { computed, onMounted, provide, ref } from 'vue';
 import localforage from 'localforage'
 import Hair from '@/components/Hair.vue';
+import { debounce } from 'lodash'
 
 const options = [
   {
@@ -79,7 +80,7 @@ const collectionSearch = async () => {
   getAllInfo()
 }
 
-const getAllInfo = async () => {
+const getAllInfo = debounce(async () => {
   const id = collection.value.map((it) => it.id).join("&id=")
   const r = await fetch(`/api/dinfo?id=${id}`)
   const data = await r.json()
@@ -91,7 +92,7 @@ const getAllInfo = async () => {
       d.likes = e.likes
     }
   }
-}
+}, 100)
 
 const collection = ref<FaceItem[]>([])
 
