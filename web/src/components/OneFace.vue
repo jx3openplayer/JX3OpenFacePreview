@@ -83,7 +83,7 @@ const tmpLove = ref(0)
 
 const onefaceWhat = ref<'front' | 'side'>('front')
 
-const off = ref(0.5)
+const off = ref(1)
 onMounted(async () => {
     isLove.value = await lovedb.getItem<LoveData>(id) != null
     isCollect.value = await collectdb.getItem<CollectData>(id) != null
