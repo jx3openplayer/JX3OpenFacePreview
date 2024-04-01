@@ -42,8 +42,18 @@ const headerMenuOptions = [
       { default: () => '声明' }
     ),
     key: "about",
+  }, {
+    label: () => h(
+      'a',
+      {
+        href: "https://talk.app.hiahiahiahia.com/t/jx3",
+        target: '_blank',
+        rel: 'noopenner noreferrer'
+      },
+      '讨论'
+    ),
+    key: "talk",
   }
-
 ]
 const route = useRoute()
 const activeKey = ref("")
