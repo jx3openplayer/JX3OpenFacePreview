@@ -53,6 +53,7 @@ const headerMenuOptions = [
       '讨论'
     ),
     key: "talk",
+    doNotFocus: true,
   }
 ]
 const route = useRoute()
@@ -72,6 +73,7 @@ watch(() => route.name, (newVal, oldVal) => {
   for (let i = 0; i < headerMenuOptions.length; i++) {
     const e = headerMenuOptions[i];
     if (e.key === newVal) {
+      if (e.doNotFocus) return
       activeKey.value = e.key;
       found = true
       break;
