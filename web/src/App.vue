@@ -42,18 +42,6 @@ const headerMenuOptions = [
       { default: () => '声明' }
     ),
     key: "about",
-  }, {
-    label: () => h(
-      'a',
-      {
-        href: "https://talk.app.hiahiahiahia.com/t/jx3",
-        target: '_blank',
-        rel: 'noopenner noreferrer'
-      },
-      '讨论'
-    ),
-    key: "talk",
-    doNotFocus: true,
   }
 ]
 const route = useRoute()
@@ -62,7 +50,6 @@ const activeKey = ref("")
 const showWait = ref(false)
 prepareIndexData(() => {
   showWait.value = true
-  console.log("第一次下载！")
 }).then(() => {
   showWait.value = false
 })
@@ -73,7 +60,6 @@ watch(() => route.name, (newVal, oldVal) => {
   for (let i = 0; i < headerMenuOptions.length; i++) {
     const e = headerMenuOptions[i];
     if (e.key === newVal) {
-      if (e.doNotFocus) return
       activeKey.value = e.key;
       found = true
       break;
