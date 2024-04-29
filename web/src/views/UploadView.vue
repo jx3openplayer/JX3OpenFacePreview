@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import type { UploadFileInfo } from "naive-ui";
 import { generateIdMap } from "@/lib/assets";
 import sha256 from 'crypto-js/sha256';
@@ -8,8 +8,12 @@ import OneFace from "../components/OneFace.vue";
 import {
   NUpload, NUploadDragger,
   NText, NH2, NThing,
+  NInput,
+  NButton,
+  NFlex,
   useMessage
 } from "naive-ui";
+import { nextTick } from "vue";
 const message = useMessage()
 const faceData = ref<any>({});
 const showList = ref<any>([]);
@@ -44,33 +48,50 @@ const handleBeforeUpload = async (data: {
 
 onMounted(async () => {
   faceData.value = await generateIdMap();
+  window.addEventListener('keydown', handleShowSearch)
 });
 
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleShowSearch)
+})
 // 这里的搜索不靠谱，搜到的居然是整个数据库的内容
 // 但网页内搜索为什么不ctrl+F呢
 // 还没想好怎么改
-// const searchVal = ref("");
-// const handleSearch = () => {
-//   showList.value = [];
-//   for (let id in faceData.value) {
-//     if (!searchVal.value) {
-//       showList.value.push(faceData.value[id]);
-//     }
-//     if (id.includes(searchVal.value)) {
-//       showList.value.push(faceData.value[id]);
-//     }
-//   }
-// };
+const showSearch = ref(false);
+const autofocus = ref(false)
+const searchVal = ref("");
+const handleSearch = () => {
+  showList.value = [];
+  for (let id in faceData.value) {
+    if (!searchVal.value) {
+      showList.value.push(faceData.value[id]);
+    }
+    if(faceData.value[id].name.includes(searchVal.value)){
+      showList.value.push(faceData.value[id]);
+    }
+  }
+};
+
+// 绑定ctrl+k打开搜索
+const handleShowSearch = (event:KeyboardEvent) => {
+  if(event.code === 'KeyK' && event.ctrlKey){
+    // 显示搜索框
+    showSearch.value = !showSearch.value;
+    // 自动获取焦点
+    autofocus.value = showSearch.value;
+  }
+  event.preventDefault();
+};
 </script>
 
 <template>
-
-  <!-- <div style="width: 100vw">
+  <div>Ctrl+K 打开搜索</div>
+  <div style="width: 100vw;" v-if="showSearch">
     <n-flex justify="center">
-      <n-input v-model:value="searchVal" style="width: 300px" />
+      <n-input v-model:value="searchVal" :autofocus="autofocus"  style="width: 300px" />
       <n-button @click="handleSearch">搜索</n-button>
     </n-flex>
-  </div> -->
+  </div>
 
   <n-upload multiple directory-dnd :show-file-list="false" @change="handleUploadChange"
     @before-upload="handleBeforeUpload">
