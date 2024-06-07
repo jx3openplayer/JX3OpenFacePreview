@@ -109,7 +109,9 @@ export async function prepareIndexData(firstDownload: () => void) {
     } else {
         firstDownload()
     }
+
     await updateIndexData()
+    await updateRank()
 }
 
 type IndexDataEvents = {
@@ -178,6 +180,34 @@ export async function updateConfig() {
     configdata = j
     await config.setItem("config", j)
     return j
+}
+
+async function updateRank() {
+    try {
+        const r = await fetch(`https://storage.jx3openplayer.com/${encodeURIComponent('data/rank.json')}`)
+        const j = await r.json() as { id: string, likes: number }[]
+        let likes: { [key: string]: number } = {}
+        if (j) {
+            j.forEach(it => likes[it.id] = it.likes)
+        }
+        const body = ["man", "female", "girl", "man"]
+        const style = ["real", "fantacy"]
+        if (indexfile) {
+            for (const b of body) {
+                for (const s of style) {
+                    for (const it of indexfile[b][s]) {
+                        it.likes = likes[it.id] ?? 0
+                    }
+                }
+            }
+
+        }
+
+        await config.setItem("rank", likes)
+        return j
+    } catch (error) {
+
+    }
 }
 
 export function getConfig() {

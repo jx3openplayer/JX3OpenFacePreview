@@ -76,6 +76,10 @@ const collectionSearch = async () => {
     allInfo.value = allInfo.value.sort((a, b) => (b.p ?? 99999) - (a.p ?? 99999))
   } else if (filter_option_value.value === '先看便宜') {
     allInfo.value = allInfo.value.sort((a, b) => (a.p ?? 99999) - (b.p ?? 99999))
+  } else if (filter_option_value.value === '最热门') {
+    allInfo.value = allInfo.value.sort((a, b) => (b.likes ?? 99999) - (a.likes ?? 99999))
+  } else if (filter_option_value.value === '最冷门') {
+    allInfo.value = allInfo.value.sort((a, b) => (a.likes ?? 99999) - (b.likes ?? 99999))
   } else if (filter_option_value.value === 'all') {
     allInfo.value = allInfo.value.sort((a, b) => b.time - a.time)
   }
@@ -130,6 +134,14 @@ const love_option = [
   {
     label: "先看便宜",
     value: "先看便宜"
+  },
+  {
+    label: "最热门",
+    value: "最热门"
+  },
+  {
+    label: "最冷门",
+    value: "最冷门"
   },
   {
     label: "我的收藏",
