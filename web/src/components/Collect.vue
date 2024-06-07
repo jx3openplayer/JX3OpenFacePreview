@@ -5,7 +5,7 @@ import { saveAs } from 'file-saver'
 import localforage from 'localforage'
 import { ref, watch } from 'vue';
 import jszip from 'jszip'
-import { getAssetPath, cacheurl } from '@/lib/assets'
+import { getAssetPath, cacheurl, recordDownload } from '@/lib/assets'
 
 import { panelEvents } from '@/interface/panels'
 
@@ -105,6 +105,7 @@ const downloadButton = async () => {
             }
             zipFile.file(filename, fileData)
             successData.push(data.id)
+            await recordDownload(data.id)
         } catch (error) {
             console.error(error)
             message.error(`下载 ${data.name} 失败！`)

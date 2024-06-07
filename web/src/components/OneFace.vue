@@ -4,7 +4,7 @@ import { ref, onMounted, inject, type Ref, watch } from 'vue';
 import { saveAs } from 'file-saver'
 import { type CollectData, collectEvents } from '@/interface/face'
 import localforage from 'localforage'
-import { getAssetPath, cache, cacheurl, getConfig } from '@/lib/assets'
+import { getAssetPath, cache, cacheurl, getConfig, recordDownload } from '@/lib/assets'
 import { checkTaitaiWeibo } from '@/lib/taitai'
 import { panelEvents } from '@/interface/panels'
 const {
@@ -48,6 +48,7 @@ const downloadButton = async () => {
     } else {
         saveAs(await cacheurl(getAssetsFile('face.dat')), `${name}.dat`)
     }
+    await recordDownload(id)
 }
 
 const fclass = ref("face-img")

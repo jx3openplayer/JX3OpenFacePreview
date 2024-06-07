@@ -61,6 +61,7 @@ interface FaceItem {
   time: number
   likes?: number
   p?: number
+  download?: number
 }
 const allInfo = ref<FaceItem[]>([])
 
@@ -82,6 +83,8 @@ const collectionSearch = async () => {
     allInfo.value = allInfo.value.sort((a, b) => (a.likes ?? 99999) - (b.likes ?? 99999))
   } else if (filter_option_value.value === 'all') {
     allInfo.value = allInfo.value.sort((a, b) => b.time - a.time)
+  } else if (filter_option_value.value == '最近下载') {
+    allInfo.value = allInfo.value.filter((it) => it.download).sort((a, b) => b.download! - a.download!)
   }
   if (search_value.value != "") {
     allInfo.value = allInfo.value.filter((it) => it.name.indexOf(search_value.value) != -1)
@@ -146,6 +149,10 @@ const love_option = [
   {
     label: "我的收藏",
     value: "love"
+  },
+  {
+    label: "最近下载",
+    value: "最近下载"
   }
 ]
 const filter_option_value = ref("all")

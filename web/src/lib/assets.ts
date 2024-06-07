@@ -95,6 +95,8 @@ const config = localforage.createInstance({
 
 
 let indexfile: IndexDataSource | null = null
+let indexfileMap: Map<string, any> | null = null
+let lastdownload: LastDownloadItem | null = null
 
 /**
  * 准备索引数据
@@ -118,6 +120,10 @@ type IndexDataEvents = {
     update: string
 };
 
+interface LastDownloadItem {
+    [key: string]: number
+}
+
 export const indexUpdateEvents = mitt<IndexDataEvents>()
 async function updateIndexData() {
     const r = await fetch(`https://storage.jx3openplayer.com/${encodeURIComponent('data/faces-index.json')}`, {
@@ -126,7 +132,28 @@ async function updateIndexData() {
         }
     })
     const j = await r.json() as IndexDataSource
+    lastdownload = await config.getItem<LastDownloadItem>("last-download") ?? {}
     indexfile = j
+    indexfileMap = new Map()
+    const body = ["man", "female", "girl", "man"]
+    const style = ["real", "fantacy"]
+    if (indexfile) {
+        for (const b of body) {
+            for (const s of style) {
+                for (const it of indexfile[b][s]) {
+                    indexfileMap.set(it.id, it)
+                }
+            }
+        }
+    }
+    try {
+        for (const key in lastdownload) {
+            indexfileMap.get(key).download = lastdownload[key]
+        }
+    } catch (error) {
+        console.error(error)
+    }
+
     const old = await config.getItem<string>("index-hash")
     await config.setItem("index", j)
     console.log("索引更新完成！")
@@ -221,6 +248,7 @@ export interface IndexMapItem {
     p?: number
     style: 'real' | 'fantacy'
     time: number
+    download?: number
 }
 let indexMap: {
     [key: string]: IndexMapItem
@@ -261,4 +289,15 @@ export function usePersistConfig<T>(key: string, defaultv: T) {
         window.localStorage.setItem("config-" + key, JSON.stringify(newv))
     })
     return v
+}
+
+
+export async function recordDownload(id: string) {
+    if (!lastdownload || !indexfileMap) return
+    lastdownload[id] = Date.now()
+    await config.setItem("last-download", lastdownload)
+    let it = indexfileMap.get(id)
+    if (it) {
+        it.download = lastdownload[id]
+    }
 }
