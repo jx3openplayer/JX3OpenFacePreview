@@ -62,6 +62,7 @@ interface FaceItem {
   likes?: number
   p?: number
   download?: number
+  c?: string
 }
 const allInfo = ref<FaceItem[]>([])
 
@@ -288,7 +289,7 @@ onMounted(async () => {
         <n-flex justify="center" class="main-face-cards">
           <OneFace :class="face_grid_class" v-for="it in collection" :facestyle="facestyle" :sex="sex" :id="it.id"
             :key="it.id + face_size_value" :facesize="face_size_value" :name="it.name" :time="new Date(it.time * 1000)"
-            :likes="it.likes" :price="it.p" :hide-side="!facedir" />
+            :likes="it.likes" :price="it.p" :hide-side="!facedir" :code="it.c"/>
         </n-flex>
       </n-layout-content>
       <n-layout-footer class="app-footer">

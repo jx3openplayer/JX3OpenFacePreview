@@ -92,7 +92,7 @@ onMounted(async () => {
   <div v-for="item in showList" :key="item.id" class="item">
     <div class="inside-item">
       <OneFace :facestyle="item.style" :key="item.id" :sex="item.sex" :id="item.id" facesize="large" :name="item.name"
-        :time="new Date(item.time * 1000)" :suffix="`「${item.filename}」`" />
+        :time="new Date(item.time * 1000)" :suffix="`「${item.filename}」`" :c="item.c"/>
     </div>
   </div>
 </template>

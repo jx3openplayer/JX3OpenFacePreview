@@ -246,6 +246,7 @@ export interface IndexMapItem {
     name: string
     sex: 'girl' | 'female' | 'man' | 'boy'
     p?: number
+    c?: string
     style: 'real' | 'fantacy'
     time: number
     download?: number

@@ -20,6 +20,7 @@ interface FaceItem {
     p?: number
     style: string
     sex: string
+    c?: string
 }
 
 const pagecount = computed(() => Math.ceil(collection.value.length / page_item_counts.value))
@@ -93,7 +94,7 @@ provide("hair", hair)
                 <n-flex justify="center" class="main-face-cards">
                     <OneFace :class="face_grid_class" v-for="it in curCollection" :facestyle="it.style" :sex="it.sex"
                         :id="it.id" :key="it.id + face_size_value" :facesize="face_size_value" :name="it.name"
-                        :time="new Date(it.time * 1000)" :likes="it.likes" :price="it.p" hide-side/>
+                        :time="new Date(it.time * 1000)" :likes="it.likes" :price="it.p" hide-side :code="it.c"/>
                 </n-flex>
             </n-layout-content>
         </n-layout>

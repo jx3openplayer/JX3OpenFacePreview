@@ -54,6 +54,8 @@ if __name__ == '__main__':
                     }
                     if "price" in data and data["price"] is not None:
                         dd["p"] = data["price"]
+                    if "code" in data and data["code"] is not None:
+                        dd["c"] = data["code"]
                     indexs[sex][sty].append(dd)
                     if not os.path.exists(os.path.join(kind_path, id, "face_front.png")):
                         if not os.path.exists(os.path.join(kind_path, id, "face_front.jpg")):

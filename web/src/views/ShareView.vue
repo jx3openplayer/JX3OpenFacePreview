@@ -40,7 +40,7 @@ const getAllInfo = async (id: string) => {
     <n-flex justify="center">
         <OneFace v-if="face != null" class="one-face-grid-large" :facestyle="face.style" :sex="face.sex" :id="face.id"
             :key="face.id" facesize="large" :name="face.name" :time="new Date(face.time * 1000)" :price="face.p"
-            :likes="likev" hide-side />
+            :likes="likev" :code="face.c" hide-side />
     </n-flex>
 </template>
 <style scoped>

@@ -14,7 +14,7 @@ import { NCard, NFlex, NA, NBlockquote, NText, NH1, NH2 } from 'naive-ui'
       <br /> <br />
       我们深知玩家在购买虚拟物品时所面临的风险，因此我们致力于公开展示捏脸作品的真实面貌，避免玩家因购买“霸王条款”所带来的损失。我们将坚守诚信原则，为玩家提供公正、透明的服务，希望玩家们在我们的平台上能够找到最合适的捏脸作品，享受游戏的乐趣。
       <br /> <br />
-      如想要为此贡献新的脸型，可以访问<n-a href="https://f.wps.cn/g/P95JDjCH/">上传</n-a>填写表单。
+      如想要为此贡献新的脸型，可以访问<n-a href="https://f.wps.cn/g/P95JDjCH/">上传</n-a>填写表单。现在支持捏脸码！
       <br /> <br />
       如果你希望增加链接支持太太，可以访问<n-a href=https://f.wps.cn/g/rfwEyacL>搜集表</n-a>登记某个太太的微博、淘宝店等信息。
 

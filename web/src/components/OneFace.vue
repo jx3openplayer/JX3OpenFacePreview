@@ -17,7 +17,8 @@ const {
     time,
     likes,
     suffix,
-    price
+    price,
+    code,
 } = defineProps<{
     facestyle: string,
     sex: string,
@@ -29,6 +30,7 @@ const {
     likes?: number,
     suffix?: string,
     price?: number,
+    code?: string,
 }>()
 
 const message = useMessage()
@@ -264,6 +266,10 @@ const share = () => {
     message.success("已复制到剪贴板！")
 }
 
+const copyCode = async () => {
+    await window.navigator.clipboard.writeText(code ?? "")
+    message.success("捏脸码复制成功：" + code)
+}
 </script>
 
 <template>
@@ -318,6 +324,14 @@ const share = () => {
                     <n-button v-if="weibo != null" class="hover-button" text @click="gotoWeibo">
                         <img src="@/assets/weibo.svg" style="height: 32px;" />
                     </n-button>
+                    <n-tooltip trigger="hover" v-if="code">
+                        <template #trigger>
+                            <n-button class="hover-text-button" text @click="copyCode">
+                                码
+                            </n-button>
+                        </template>
+                        点击复制捏脸码：{{ code }}
+                    </n-tooltip>
                 </n-flex>
 
                 <n-time class="time" :time="time" type="date" time-zone="Asia/Shanghai" />
@@ -356,6 +370,28 @@ const share = () => {
     }
 }
 
+.hover-text-button {
+    display: inline-block;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    color: rgb(114, 114, 114);
+    transition: all 0.3s;
+    font-size: 20px;
+}
+
+.hover-text-button:hover {
+    transform: scale(1.2);
+    color: rgb(114, 114, 114);
+}
+
+.hover-text-button:active {
+    transform: scale(2);
+    color: rgb(114, 114, 114);
+}
 
 
 .hover-button {
