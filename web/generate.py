@@ -78,10 +78,15 @@ if __name__ == '__main__':
                         # os.remove(os.path.join(kind_path, id, "face_side.png"))
             faces = sorted(indexs[sex][sty], key=lambda x: x["time"], reverse=True)
             indexs[sex][sty] = faces
-    with open("data/faces-index.json", "w", encoding="utf8") as f:
-        content = json.dumps(indexs, ensure_ascii=False)
-        indexs["sha256"] = calculate_sha256(content)
+    content = json.dumps(indexs, ensure_ascii=False)
+    indexs["sha256"] = calculate_sha256(content)
+    with open(f"data/faces-index.{indexs["sha256"]}.json", "w", encoding="utf8") as f:
         json.dump(indexs, f, ensure_ascii=False)
+
+    with open(f"src/lib/url.json", "w", encoding="utf8") as f:
+        json.dump({
+            "index": f"faces-index.{indexs["sha256"]}.json"
+        }, f, ensure_ascii=False)
     for sty in styles:
         for sex in sexs:
             with open(f"data/faces-index.{sty}.{sex}.json", "w", encoding="utf8") as f:

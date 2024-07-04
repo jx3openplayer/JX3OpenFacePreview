@@ -52,6 +52,19 @@ export async function cacheurl(url: string) {
     return file
 }
 
+export async function cachejsonforever(url: string) {
+    const old = await cachedb.getItem<CacheJson>(url)
+    const update = async () => {
+        const file = await (await fetch(url)).json()
+        await cachedb.setItem(url, { timesc: Date.now(), json: file })
+        return file
+    }
+    if (old != null) {
+        return old.json
+    }
+    return await update()
+}
+
 interface CacheJson {
     timesc: number
     json: any
@@ -125,13 +138,9 @@ interface LastDownloadItem {
 }
 
 export const indexUpdateEvents = mitt<IndexDataEvents>()
+import url from "@/lib/url.json"
 async function updateIndexData() {
-    const r = await fetch(`https://storage.jx3openplayer.com/${encodeURIComponent('data/faces-index.json')}`, {
-        headers: {
-            "Cache-Control": "max-age=1800"
-        }
-    })
-    const j = await r.json() as IndexDataSource
+    const j: IndexDataSource = await cachejsonforever(`https://storage.jx3openplayer.com/${encodeURIComponent("data/" + url.index)}`)
     lastdownload = await config.getItem<LastDownloadItem>("last-download") ?? {}
     indexfile = j
     indexfileMap = new Map()
