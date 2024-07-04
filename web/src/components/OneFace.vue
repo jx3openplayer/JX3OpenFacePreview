@@ -190,7 +190,7 @@ function imageToBlob(src: string): Promise<Blob> {
 
 
 const getImage = async (imgname: string, direction: string) => {
-    const bgimage = URL.createObjectURL(await cache(getAssetsFile(imgname), async () => await imageToBlob(getAssetsFile(imgname)), 60 * 1000 * 60 * 24 * 3))
+    const bgimage = URL.createObjectURL(await cache(getAssetsFile(imgname), async () => await imageToBlob(getAssetsFile(imgname))))
     if (hairname.value === null) {
         if (direction === "front") {
             frontImage.value = bgimage
