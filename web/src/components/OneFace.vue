@@ -283,7 +283,7 @@ const copyCode = async () => {
                         ￥{{ price * off / 100 }}
                     </n-tag>
                 </template>
-                商城售价{{ price }}通宝，折合人民币{{ (price ?? 0) / 100 }}元。{{ (off != 1) ? "当前打折为" + off * 100 + "%！" : "" }}
+                商城售价{{ price }}通宝，折合人民币{{ (price ?? 0) / 100 }}元。{{ (off != 1) ? "当前打折为" + off * 100 + "%！" : "" }}（若价格过低可能为数据错误！）
             </n-tooltip>
 
         </template>
