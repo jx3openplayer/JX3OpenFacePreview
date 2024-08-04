@@ -37,6 +37,11 @@ const router = createRouter({
       name: 'share',
       component: () => import('../views/ShareView.vue')
     },
+    {
+      path: '/tools',
+      name: 'tools',
+      component: () => import('../views/Tools.vue')
+    },
   ]
 })
 
