@@ -51,6 +51,7 @@ const downloadButton = async () => {
         saveAs(await cacheurl(getAssetsFile('face.dat')), `${name}.dat`)
     }
     await recordDownload(id)
+    fetch(`/api/update?type=download&id=${id}`, { method: "post" })
 }
 
 const fclass = ref("face-img")

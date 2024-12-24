@@ -106,6 +106,7 @@ const downloadButton = async () => {
             zipFile.file(filename, fileData)
             successData.push(data.id)
             await recordDownload(data.id)
+            fetch(`/api/update?type=download&id=${data.id}`, { method: "post" })
         } catch (error) {
             console.error(error)
             message.error(`下载 ${data.name} 失败！`)
