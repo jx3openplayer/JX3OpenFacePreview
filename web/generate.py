@@ -33,6 +33,7 @@ def calculate_sha256(string):
     return sha256_hash.hexdigest()
 
 if __name__ == '__main__':
+    global_code = {}
     for sty in styles:
         for sex in sexs:
             kind_path = os.path.join(rooturl, sty, sex)
@@ -56,6 +57,8 @@ if __name__ == '__main__':
                         dd["p"] = data["price"]
                     if "code" in data and data["code"] is not None:
                         dd["c"] = data["code"]
+                        global_code[data["code"]] = 1
+
                     indexs[sex][sty].append(dd)
                     if not os.path.exists(os.path.join(kind_path, id, "face_front.png")):
                         if not os.path.exists(os.path.join(kind_path, id, "face_front.jpg")):
@@ -91,3 +94,6 @@ if __name__ == '__main__':
         for sex in sexs:
             with open(f"data/faces-index.{sty}.{sex}.json", "w", encoding="utf8") as f:
                 json.dump(indexs[sex][sty], f, ensure_ascii=False)
+    
+    with open(f"data/code.json", "w", encoding="utf8") as f:
+        json.dump(global_code, f, ensure_ascii=False)
